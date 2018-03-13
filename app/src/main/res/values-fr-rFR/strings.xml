@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Do_you_still_go_to_ATM">700 000 français utilisent déja Points Credit. Vous allez encore au distributeur ?</string>
+    <string name="I_have_an_account">J'ai déja un compte</string>
+    <string name="I_am_a_new_user">Je suis nouveau</string>
+    <string name="Connect">Se connecter</string>
+    <string name="Sign_up">S'inscrire</string>
+    <string name="Email">Email</string>
+    <string name="Password">Mot de passe</string>
+    <string name="Mobile">Mobile</string>
+    <string name="First_name">Prémon</string>
+    <string name="Last_name">Nom</string>
+    <string name="Agreed">J'ai lu et accepté les conditions d'utilisation</string>
+    <string name="Sign_up_now">S'inscrire maintenant</string>
+    <string name="InputEmail">frPlease input your email</string>
+    <string name="InputValidEmail">frPlease input a valid email</string>
+    <string name="InputPWD">frPlease input a password</string>
+    <string name="PWDForm">frpassword length to be limited 6 - 20 characters</string>
+    <string name="InputPhone">frPlease input your phone number</string>
+    <string name="InputFirstName">frPlease input your first name</string>
+    <string name="InputLastName">frPlease input your last name</string>
+    <string name="ReadAndAcceptTerms">frPlease read and accept our terms</string>
+    <string name="InvalidEmail">Attention : Cette adresse e-mail n'est pas valide</string>
+    <string name="EmailExists">frAn account exists with this e-mail address</string>
+    <string name="Balance">Solde</string>
+    <string name="Transactions">Transactions</string>
+    <string name="ErCode">Mon code</string>
+    <string name="Scan">Scaner</string>
+    <string name="Transfer">Virment</string>
+    <string name="Cancel">Annuler</string>
+    <string name="Transfer_to">Virment à</string>
+    <string name="Input_amount">Saisir montant</string>
+    <string name="Confirm">Confirmer</string>
+    <string name="Balance_insufficient">Solde insuffisante</string>
+    <string name="Succeeded">Réussi</string>
+    <string name="You_transfered">Vous avez fait un transfert:</string>
+    <string name="CheckMailbox">Veuillez vérifier votre boîte aux lettres</string>
+
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Do_you_still_go_to_ATM">700 000 frenchs already used Points Credit. Do you still go to ATM ?</string>
+    <string name="I_have_an_account">I have an account</string>
+    <string name="I_am_a_new_user">I am a new user</string>
+    <string name="Connect">Connect</string>
+    <string name="Sign_up">Sign up</string>
+    <string name="Email">Email</string>
+    <string name="Password">Password</string>
+    <string name="Mobile">Mobile</string>
+    <string name="First_name">First name</string>
+    <string name="Last_name">Last name</string>
+    <string name="Agreed">I've read and agreed on Terms of use</string>
+    <string name="Sign_up_now">Sign up now</string>
+    <string name="InputEmail">Please input your email</string>
+    <string name="InputValidEmail">Please input a valid email</string>
+    <string name="InputPWD">Please input a password</string>
+    <string name="PWDForm">password length to be limited 6 - 20 characters</string>
+    <string name="InputPhone">Please input your phone number</string>
+    <string name="InputFirstName">Please input your first name</string>
+    <string name="InputLastName">Please input your last name</string>
+    <string name="ReadAndAcceptTerms">Please read and accept our terms</string>
+    <string name="InvalidEmail">Attention : This e-mail address is invalid</string>
+    <string name="EmailExists">An account exists with this e-mail address</string>
+    <string name="Balance">Balance</string>
+    <string name="Transactions">Transactions</string>
+    <string name="ErCode">My code</string>
+    <string name="Scan">Scan</string>
+    <string name="Transfer">Transfer</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Transfer_to">Transfer to</string>
+    <string name="Input_amount">Input amount</string>
+    <string name="Confirm">Confirm</string>
+    <string name="Balance_insufficient">Balance insufficient</string>
+    <string name="Succeeded">Succeeded</string>
+    <string name="You_transfered">You transfered:</string>
+    <string name="CheckMailbox">Please check your mailbox</string>
+
+</resources>

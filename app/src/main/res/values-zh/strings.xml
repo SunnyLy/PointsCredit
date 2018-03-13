@@ -1,6 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PointsCredit</string>
-
     <string name="Do_you_still_go_to_ATM">70万法国人已开始使用PointsCredit. 你还在使用自动柜员机吗?</string>
     <string name="I_have_an_account">我已有账号</string>
     <string name="I_am_a_new_user">我是新用户</string>
@@ -36,4 +35,5 @@
     <string name="Succeeded">成功</string>
     <string name="You_transfered">你刚刚转出:</string>
     <string name="CheckMailbox">请查看您的邮箱</string>
+
 </resources>
