@@ -10,7 +10,7 @@
     <string name="Mobile">Mobile</string>
     <string name="First_name">First name</string>
     <string name="Last_name">Last name</string>
-    <string name="Agreed">I've read and agreed on Terms of use</string>
+    <string name="Agreed">I\'ve read and agreed on Terms of use</string>
     <string name="Sign_up_now">Sign up now</string>
     <string name="InputEmail">Please input your email</string>
     <string name="InputValidEmail">Please input a valid email</string>
