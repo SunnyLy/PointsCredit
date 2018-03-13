@@ -2,10 +2,14 @@ package com.michel.pointscredit.view.activity
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import butterknife.BindView
 import com.michel.pointscredit.R
 import com.michel.pointscredit.base.PCBaseActivity
+import com.michel.pointscredit.utils.RouterUtils
 
 /**
  * Created by Sunny on 2018/3/13.
@@ -23,13 +27,36 @@ class MainActivity : PCBaseActivity() {
     }
 
     @BindView(R.id.tv_info) lateinit var mTvInfo: TextView
+    //已有账号
+    @BindView(R.id.btn_accounted) lateinit var mBtnAccount: Button
+    //新用户
+    @BindView(R.id.btn_newUser) lateinit var mBtnNewer: Button
     override fun getLayoutId(): Int {
         return R.layout.activity_main
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setViewsOnClickListener(mBtnAccount,mBtnNewer)
     }
 
     override fun onResume() {
         super.onResume()
         mTvInfo.text = this.getString(R.string.Do_you_still_go_to_ATM)
+    }
+
+    override fun onClick(p0: View?) {
+        if (p0 == null){
+            return
+        }
+        if (p0.id == R.id.btn_accounted){
+            //login
+            var  intent = Intent(this@MainActivity,LoginActivity::class.java)
+            startActivity(intent)
+        }else if (p0.id == R.id.btn_newUser){
+            var  intent = Intent(this@MainActivity,RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }

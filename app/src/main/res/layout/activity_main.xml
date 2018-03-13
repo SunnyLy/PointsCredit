@@ -37,6 +37,7 @@
         android:textStyle="bold" />
 
     <Button
+        android:id="@+id/btn_accounted"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_above="@+id/btn_newUser"
