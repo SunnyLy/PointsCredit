@@ -24,7 +24,7 @@
         <activity android:name=".view.activity.WelcomeActivity">
 
         </activity>
-        <activity android:name=".view.activity.SplashActivity">
+        <activity android:name=".view.activity.PCSplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

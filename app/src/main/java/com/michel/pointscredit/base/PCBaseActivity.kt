@@ -31,6 +31,10 @@ abstract class PCBaseActivity : AppCompatActivity(), View.OnClickListener {
         initParams()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     /**
      * 初始化参数
      */

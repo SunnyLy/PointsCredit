@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Do_you_still_go_to_ATM">70万法国人已开始使用PointsCredit. 你还在使用自动柜员机吗?</string>
-    <string name="I_have_an_account">我已有账号</string>
-    <string name="I_am_a_new_user">我是新用户</string>
+    <string name="I_have_an_account">已有账号,马上登录</string>
+    <string name="I_am_a_new_user">没有账号,立即注册</string>
     <string name="Connect">登录</string>
     <string name="Sign_up">注册</string>
     <string name="Email">邮箱</string>

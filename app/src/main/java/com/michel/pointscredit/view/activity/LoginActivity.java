@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.User;
+import com.michel.pointscredit.utils.RouterUtils;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -40,6 +41,8 @@ public class LoginActivity extends PCBaseActivity {
     EditText mEtPwd;
     @BindView(R.id.btn_login)
     Button mBtnLogin;
+    @BindView(R.id.btn_login_reg)
+    Button mBtnReg;
     @BindView(R.id.tv_login_forget)
     TextView mTvForget;
 
@@ -59,7 +62,7 @@ public class LoginActivity extends PCBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setViewsOnClickListener(mBtnLogin, mTvForget);
+        setViewsOnClickListener(mBtnLogin, mBtnReg,mTvForget);
         mProgressDialog = new ProgressDialog(this);
         Intent intent = getIntent();
         if (intent != null) {
@@ -99,6 +102,10 @@ public class LoginActivity extends PCBaseActivity {
                 break;
             case R.id.tv_login_forget:
                 showEmailDialog();
+                break;
+
+            case R.id.btn_login_reg:
+                RouterUtils.jump2Target(this,RegisterActivity.class);
                 break;
         }
     }

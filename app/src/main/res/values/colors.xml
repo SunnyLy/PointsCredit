@@ -16,4 +16,10 @@
     <color name="result_point_color">#C0FFFF00</color>
     <color name="laser_color">#0F0</color>
     <color name="corner_color">#00FF00</color>
+    <color name="color_6492FF">#6492ff</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_D1DCFD">#d1dcfd</color>
+    <color name="color_722BFF">#722BFF</color>
+    <color name="color_527FFF">#527fff</color>
 </resources>

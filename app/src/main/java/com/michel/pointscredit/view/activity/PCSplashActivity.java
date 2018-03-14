@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
-import com.michel.pointscredit.bean.User;
 import com.parse.ParseUser;
 
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * Created by 80010651 on 2018/3/14.
  */
 
-public class SplashActivity extends PCBaseActivity {
+public class PCSplashActivity extends PCBaseActivity {
 
     private ParseUser mUser;
 
@@ -33,15 +32,15 @@ public class SplashActivity extends PCBaseActivity {
             mUser.logOut();
             LoginActivity.startLoginActy(this, email);
         }else{
-            Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
-            SplashActivity.this.startActivity(intent);
+            Intent intent = new Intent(PCSplashActivity.this, WelcomeActivity.class);
+            PCSplashActivity.this.startActivity(intent);
         }
         finish();
 //        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
-//                Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
-//                SplashActivity.this.startActivity(intent);
+//                Intent intent = new Intent(PCSplashActivity.this, WelcomeActivity.class);
+//                PCSplashActivity.this.startActivity(intent);
 //                finish();
 //            }
 //        }, 1000);
