@@ -11,4 +11,8 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="App.Theme.Dialog.Alert" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/black_alpha_240</item>
+    </style>
+
 </resources>

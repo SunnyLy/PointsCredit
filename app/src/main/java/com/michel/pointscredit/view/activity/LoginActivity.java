@@ -1,7 +1,9 @@
 package com.michel.pointscredit.view.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +20,7 @@ import com.michel.pointscredit.bean.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.RequestPasswordResetCallback;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -95,8 +98,44 @@ public class LoginActivity extends PCBaseActivity {
                 });
                 break;
             case R.id.tv_login_forget:
+                showEmailDialog();
                 break;
         }
+    }
+
+    private void showEmailDialog() {
+        final EditText etEmail = new EditText(this);
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.InputEmail))
+                .setView(etEmail)
+                .setPositiveButton(getResources().getString(R.string.Confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialogInterface, int i) {
+                        //确认
+                        String strEmail = etEmail.getText().toString();
+                        if (TextUtils.isEmpty(strEmail)) {
+                            Toast.makeText(LoginActivity.this, getResources().getString(R.string.InputEmail), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        User.requestPasswordResetInBackground(strEmail, new RequestPasswordResetCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.CheckMailbox), Toast.LENGTH_SHORT).show();
+                                    dialogInterface.dismiss();
+                                }
+                            }
+                        });
+
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        //取消
+                        if (dialog != null) dialog.dismiss();
+                    }
+                }).show();
     }
 
     private void test() {
