@@ -18,16 +18,24 @@ import android.view.WindowManager
  * Base界面：
  * 这里主要是提供一些模板操作
  */
-abstract class PCBaseActivity : AppCompatActivity(),View.OnClickListener {
+abstract class PCBaseActivity : AppCompatActivity(), View.OnClickListener {
 
     var unbinder: Unbinder? = null
-    var mContext: Context ?=null
+    var mContext: Context? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(getLayoutId())
         mContext = this
+        setContentView(getLayoutId())
         unbinder = ButterKnife.bind(this)
+        initParams()
+    }
+
+    /**
+     * 初始化参数
+     */
+    fun initParams() {
+
     }
 
     abstract fun getLayoutId(): Int
@@ -35,12 +43,12 @@ abstract class PCBaseActivity : AppCompatActivity(),View.OnClickListener {
     /**
      * 設置點擊監聽
      */
-    fun setViewsOnClickListener(vararg views: View){
-       if (views.size > 0){
-           for (view in views){
-               view.setOnClickListener(this)
-           }
-       }
+    fun setViewsOnClickListener(vararg views: View) {
+        if (views.isNotEmpty()) {
+            for (view in views) {
+                view.setOnClickListener(this)
+            }
+        }
     }
 
     override fun onClick(p0: View?) {

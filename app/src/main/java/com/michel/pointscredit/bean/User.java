@@ -12,14 +12,16 @@ import com.parse.ParseUser;
  * 然后可以自定义扩展需要属性
  */
 
-@ParseClassName("PCUser")
-public class PCUser extends ParseUser {
+@ParseClassName("User")
+public class User extends ParseUser {
 
-    private static final String CONTACT_EMAIL = "contactEmail";
-    private static final String FIRST_NAME = "firstName";
-    private static final String LAST_NAME = "lastName";
-    private static final String PHONE = "phone";
-    private static final String IS_ADMIN = "isAdmin";
+    public static final String TAG = User.class.getSimpleName();
+    public static final String CONTACT_EMAIL = "contactEmail";
+    public static final String PASSWORD = "password";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    public static final String PHONE = "phone";
+    public static final String IS_ADMIN = "isAdmin";
 
     public String getContactEmail() {
         return getString(CONTACT_EMAIL);

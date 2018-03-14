@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.michel.pointscredit.view.activity.MainActivity">
+    tools:context="com.michel.pointscredit.view.activity.WelcomeActivity">
 
     <TextView
         android:id="@+id/tv_info"
