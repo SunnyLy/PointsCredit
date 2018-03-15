@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.User;
+import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.parse.ParseException;
 import com.parse.SignUpCallback;
 
@@ -41,8 +42,9 @@ public class RegisterActivity extends PCBaseActivity {
     CheckBox mCBAgree;
     @BindView(R.id.btn_reg)
     Button mBtnReg;
+    @BindView(R.id.reg_title)
+    PCCommonTitleLayout mTitleBar;
 
-    //        private ParseObject mUser;
     private User mUser;
 
     private ProgressDialog mPD;
@@ -55,7 +57,7 @@ public class RegisterActivity extends PCBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setViewsOnClickListener(mCBAgree, mBtnReg);
+        setViewsOnClickListener(mCBAgree, mBtnReg, mTitleBar.getLeftBackView());
         mUser = new User();
         mPD = new ProgressDialog(this);
     }
@@ -105,6 +107,10 @@ public class RegisterActivity extends PCBaseActivity {
 //                    }
 //                });
 //                break;
+
+            case R.id.iv_back:
+                finish();
+                break;
         }
     }
 }

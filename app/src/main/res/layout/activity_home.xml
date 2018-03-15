@@ -1,90 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:rtv="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.michel.pointscredit.view.widget.PCCommonTitleLayout
+        android:id="@+id/login_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        app:title_content="@string/Balance" />
+
 
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="406dp"
-        android:layout_height="336dp"
+        android:layout_height="299dp"
+        android:layout_below="@+id/login_title"
         android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/home_bg" />
+        android:src="@drawable/home_bg" />
 
     <ImageView
         android:id="@+id/imageView11"
         android:layout_width="208dp"
         android:layout_height="122dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_below="@+id/login_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.509"
         app:srcCompat="@drawable/pc_logo" />
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="183dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="392dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:visibility="visible">
 
-        <TextView
+        <com.ruffian.library.RTextView
             android:id="@+id/btn_qrcode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:drawablePadding="2dp"
-            android:drawableTop="@drawable/ic_code"
+            android:drawablePadding="14dp"
             android:gravity="center"
+            android:padding="28dp"
             android:text="@string/ErCode"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            rtv:background_pressed="@color/color_999999"
+            rtv:icon_direction="top"
+            rtv:icon_height="36dp"
+            rtv:icon_src_normal="@drawable/ic_code"
+            rtv:icon_width="36dp" />
 
-        <TextView
+        <com.ruffian.library.RTextView
             android:id="@+id/btn_scan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:drawableTop="@drawable/ic_scan"
+            android:drawablePadding="14dp"
             android:gravity="center"
-            android:text="@string/Scan" />
+            android:padding="28dp"
+            android:text="@string/Scan"
+            rtv:background_pressed="@color/color_999999"
+            rtv:icon_direction="top"
+            rtv:icon_height="36dp"
+            rtv:icon_src_normal="@drawable/ic_scan"
+            rtv:icon_width="36dp" />
 
-        <TextView
+        <com.ruffian.library.RTextView
+            android:id="@+id/btn_transfer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:drawableTop="@drawable/ic_transfer"
+            android:drawablePadding="14dp"
             android:gravity="center"
+            android:padding="28dp"
             android:text="@string/Transfer"
             android:textAlignment="center"
-            android:visibility="visible" />
+            android:visibility="visible"
+            rtv:background_pressed="@color/color_999999"
+            rtv:icon_direction="top"
+            rtv:icon_height="36dp"
+            rtv:icon_src_normal="@drawable/ic_transfer"
+            rtv:icon_width="36dp" />
+
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="302dp"
-        android:layout_height="92dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginStart="9dp"
         android:layout_marginTop="304dp"
-        android:background="@drawable/round_rectangle_white"
+        android:background="@drawable/round_rectangle_white_radius7"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.042">
 
         <TextView
             android:id="@+id/textView6"
@@ -96,7 +118,9 @@
             android:layout_marginLeft="27dp"
             android:layout_marginStart="27dp"
             android:layout_marginTop="20dp"
-            android:text="@string/Balance" />
+            android:text="@string/Balance"
+            android:textColor="@color/color_666666"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/textView7"
@@ -110,7 +134,8 @@
             android:layout_marginTop="16dp"
             android:text="50"
             android:textAlignment="center"
-            android:textSize="18sp"
+            android:textColor="@color/color_666666"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -123,7 +148,9 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="29dp"
             android:layout_marginRight="29dp"
-            android:text="@string/Transactions" />
+            android:text="@string/Transactions"
+            android:textColor="@color/color_666666"
+            android:textSize="13sp" />
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

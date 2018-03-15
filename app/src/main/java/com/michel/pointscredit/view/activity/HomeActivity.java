@@ -12,10 +12,12 @@ import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.Transaction;
 import com.michel.pointscredit.google.zxing.activity.CaptureActivity;
 import com.michel.pointscredit.utils.RouterUtils;
+import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.ruffian.library.RTextView;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -31,9 +33,13 @@ public class HomeActivity extends PCBaseActivity {
     @BindView(R.id.tv_transactions)
     TextView mTransaction;
     @BindView(R.id.btn_scan)
-    TextView mBtnScan;
+    RTextView mBtnScan;
     @BindView(R.id.btn_qrcode)
-    TextView mBtnQrcode;
+    RTextView mBtnQrcode;
+    @BindView(R.id.btn_transfer)
+    RTextView mBtnTransfer;
+    @BindView(R.id.login_title)
+    PCCommonTitleLayout mTitleBar;
 
     private static final int REQUEST_CODE = 0x100;
 
@@ -45,7 +51,7 @@ public class HomeActivity extends PCBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setViewsOnClickListener(mTransaction, mBtnScan, mBtnQrcode);
+        setViewsOnClickListener(mTransaction, mBtnScan, mBtnQrcode, mBtnTransfer, mTitleBar.getLeftBackView());
         ParseQuery<Transaction> parseQuery = ParseQuery.getQuery(Transaction.TAG);
         if (ParseUser.getCurrentUser() == null) return;
         //objectId:EHWkHpMtD7
@@ -74,15 +80,25 @@ public class HomeActivity extends PCBaseActivity {
                 RouterUtils.jump2TargetForResult(this, CaptureActivity.class, REQUEST_CODE);
                 break;
             case R.id.btn_qrcode:
-                ParseUser user = ParseUser.getCurrentUser();
-                if (user != null) {
-                    String userId = user.getObjectId();
-                    Bundle params = new Bundle();
-                    params.putString(MyQrcodeActivity.USER_ID, userId);
-                    RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
-                }
+//                ParseUser user = ParseUser.getCurrentUser();
+//                if (user != null) {
+//                    String userId = user.getObjectId();
+//                    Bundle params = new Bundle();
+//                    params.putString(MyQrcodeActivity.USER_ID, userId);
+//                    RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
+//                }
+                test();
+                break;
+            case R.id.iv_back:
+                finish();
                 break;
         }
+    }
+
+    private void test() {
+        Bundle params = new Bundle();
+        params.putString(MyQrcodeActivity.USER_ID, "EHWkHpMtD7");
+        RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
     }
 
     @Override

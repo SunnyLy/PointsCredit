@@ -41,5 +41,7 @@
     <string name="qr_scan_tips">将二维码/条码放入框内，即可自动扫描</string>
     <string name="actionbar_title_qr_scan">二维码/条码</string>
     <string name="str_request_camera_message">请求获取相机权限</string>
+    <string name="str_request_sd_message">请求获取手机存储权限</string>
     <string name="permissions_camera_error">相机无法完成初始化,请正确授权。</string>
+    <string name="permissions_external_error">图片存储失败,请正确授权。</string>
 </resources>

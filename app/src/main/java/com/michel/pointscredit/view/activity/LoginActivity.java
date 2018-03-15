@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.User;
 import com.michel.pointscredit.utils.RouterUtils;
+import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -45,6 +47,8 @@ public class LoginActivity extends PCBaseActivity {
     Button mBtnReg;
     @BindView(R.id.tv_login_forget)
     TextView mTvForget;
+    @BindView(R.id.login_title)
+    PCCommonTitleLayout mTitleBar;
 
     private ProgressDialog mProgressDialog;
 
@@ -62,7 +66,7 @@ public class LoginActivity extends PCBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setViewsOnClickListener(mBtnLogin, mBtnReg,mTvForget);
+        setViewsOnClickListener(mBtnLogin, mBtnReg, mTvForget, mTitleBar.getLeftBackView());
         mProgressDialog = new ProgressDialog(this);
         Intent intent = getIntent();
         if (intent != null) {
@@ -83,20 +87,18 @@ public class LoginActivity extends PCBaseActivity {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         mProgressDialog.dismiss();
-//                        if (user != null) {
-//                            Log.e("pc", "login:" + user.toString());
-//                        }
-//                        if (e != null) {
-//                            Log.e("pc", e.getMessage());
-//                            Toast.makeText(LoginActivity.this, "登录失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-//                            Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-//                            startActivity(homeIntent);
-//                            finish();
-//                        }
-
-                        test();
+                        if (user != null) {
+                            Log.e("pc", "login:" + user.toString());
+                        }
+                        if (e != null) {
+                            Log.e("pc", e.getMessage());
+                            Toast.makeText(LoginActivity.this, "登录失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                            Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(homeIntent);
+                            finish();
+                        }
                     }
                 });
                 break;
@@ -105,7 +107,10 @@ public class LoginActivity extends PCBaseActivity {
                 break;
 
             case R.id.btn_login_reg:
-                RouterUtils.jump2Target(this,RegisterActivity.class);
+                RouterUtils.jump2Target(this, RegisterActivity.class);
+                break;
+            case R.id.iv_back:
+                finish();
                 break;
         }
     }
@@ -143,12 +148,5 @@ public class LoginActivity extends PCBaseActivity {
                         if (dialog != null) dialog.dismiss();
                     }
                 }).show();
-    }
-
-    private void test() {
-        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-        Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-        startActivity(homeIntent);
-        finish();
     }
 }

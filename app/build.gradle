@@ -42,6 +42,8 @@ dependencies {
     //easypermissions
     compile 'pub.devrel:easypermissions:0.3.0'
 
+    compile 'com.ruffian.library:RTextView:1.0.6'
+
 }
 repositories {
     mavenCentral()
