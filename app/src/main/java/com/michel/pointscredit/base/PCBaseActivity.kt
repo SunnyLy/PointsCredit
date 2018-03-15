@@ -28,17 +28,13 @@ abstract class PCBaseActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        QMUIStatusBarHelper.translucent(this) // 沉浸式状态栏
-        //当系统版本为4.4或者4.4以上时可以使用沉浸式状态栏
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //透明状态栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            //透明导航栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-        }
-
         mContext = this
+
+        //沉浸式
         setContentView(getLayoutId())
+        MatrialStatusBarUtils.compat(this)
+
+
         unbinder = ButterKnife.bind(this)
         initParams()
     }

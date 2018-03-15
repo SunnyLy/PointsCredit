@@ -1,16 +1,24 @@
 package com.michel.pointscredit.view.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.Result;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.Transaction;
 import com.michel.pointscredit.google.zxing.activity.CaptureActivity;
+import com.michel.pointscredit.utils.QrCodeUtils;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.michel.pointscredit.view.widget.SimplexToast;
@@ -31,6 +39,7 @@ import butterknife.BindView;
  */
 
 public class HomeActivity extends PCBaseActivity {
+    private static final int IMAGE_REQUEST_CODE = 0x101;
     @BindView(R.id.tv_transactions)
     TextView mTransaction;
     @BindView(R.id.btn_scan)
@@ -81,22 +90,33 @@ public class HomeActivity extends PCBaseActivity {
                 RouterUtils.jump2TargetForResult(this, CaptureActivity.class, REQUEST_CODE);
                 break;
             case R.id.btn_qrcode:
-//                ParseUser user = ParseUser.getCurrentUser();
-//                if (user != null) {
-//                    String userId = user.getObjectId();
-//                    Bundle params = new Bundle();
-//                    params.putString(MyQrcodeActivity.USER_ID, userId);
-//                    RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
-//                }
-                test();
+                ParseUser user = ParseUser.getCurrentUser();
+                if (user != null) {
+                    String userId = user.getObjectId();
+                    Bundle params = new Bundle();
+                    params.putString(MyQrcodeActivity.USER_ID, userId);
+                    RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
+                }
+//                test();
                 break;
             case R.id.iv_back:
                 finish();
                 break;
             case R.id.btn_transfer:
-                SimplexToast.show(this, "转账。。。。");
+                openGallery();
                 break;
         }
+    }
+
+    /**
+     * 打开 相册
+     */
+    private void openGallery() {
+        //在这里跳转到手机系统相册里面
+        Intent intent = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, IMAGE_REQUEST_CODE);
     }
 
     private void test() {
@@ -110,10 +130,60 @@ public class HomeActivity extends PCBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //扫描结果回调
         if (resultCode == RESULT_OK) { //RESULT_OK = -1
-            Bundle bundle = data.getExtras();
-            String scanResult = bundle.getString(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN);
-            //将扫描出的信息显示出来
-            Toast.makeText(HomeActivity.this, scanResult + "", Toast.LENGTH_SHORT).show();
+
         }
+
+        //在相册里面选择好相片之后调回到现在的这个activity中
+        switch (requestCode) {
+            case IMAGE_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {//resultcode是setResult里面设置的code值
+                    String path = getImagPath(data);
+                    if (!TextUtils.isEmpty(path)){
+                       Result result =  QrCodeUtils.scanningImage(path);
+                       if (result != null && !TextUtils.isEmpty(result.getText())){
+                           SimplexToast.show(HomeActivity.this,result.getText());
+                       }else{
+                           SimplexToast.show(HomeActivity.this,"未掃描到內容");
+                       }
+                    }
+                }
+                break;
+
+            case REQUEST_CODE:
+                //二维码扫描结果
+                if (data == null)return;
+                Bundle bundle = data.getExtras();
+                String scanResult = bundle.getString(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN);
+                //将扫描出的信息显示出来
+                SimplexToast.show(HomeActivity.this,scanResult);
+                break;
+        }
+    }
+
+    /**
+     * 獲取选择的照片的路径
+     * @param data
+     * @return
+     */
+    private String getImagPath(Intent data) {
+        Cursor cursor=null;
+        String  path=null;
+        try {
+            Uri selectedImage = data.getData(); //获取系统返回的照片的Uri
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            path = cursor.getString(columnIndex);  //获取照片路径
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor != null){
+                cursor.close();
+            }
+        }
+
+        return path;
     }
 }

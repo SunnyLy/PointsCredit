@@ -63,7 +63,7 @@ public class QrCodeUtils {
      * @param path
      * @return
      */
-    public Result scanningImage(String path) {
+    public static Result scanningImage(String path) {
         Bitmap scanBitmap;
         if (TextUtils.isEmpty(path)) {
             return null;
@@ -84,6 +84,7 @@ public class QrCodeUtils {
         int width = scanBitmap.getWidth();
         int height = scanBitmap.getHeight();
         int[] pixels = new int[width * height];
+        scanBitmap.getPixels(pixels,0,width,0,0,width,height);
         RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
         BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
         QRCodeReader reader = new QRCodeReader();
