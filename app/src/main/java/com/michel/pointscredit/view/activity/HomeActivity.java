@@ -13,6 +13,7 @@ import com.michel.pointscredit.bean.Transaction;
 import com.michel.pointscredit.google.zxing.activity.CaptureActivity;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
+import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -56,8 +57,8 @@ public class HomeActivity extends PCBaseActivity {
         if (ParseUser.getCurrentUser() == null) return;
         //objectId:EHWkHpMtD7
         Log.e("pc:home", "objectId=" + ParseUser.getCurrentUser().getObjectId());
-//        parseQuery.whereEqualTo("objectId", "4LoVmT5twu");
-        parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
+        parseQuery.whereContains("users", "4LoVmT5twu");
+//        parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
         parseQuery.setLimit(1000);//最多拉取1000条数据
         parseQuery.findInBackground(new FindCallback<Transaction>() {
             @Override
@@ -91,6 +92,9 @@ public class HomeActivity extends PCBaseActivity {
                 break;
             case R.id.iv_back:
                 finish();
+                break;
+            case R.id.btn_transfer:
+                SimplexToast.show(this, "转账。。。。");
                 break;
         }
     }

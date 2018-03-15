@@ -43,6 +43,8 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.3.0'
 
     compile 'com.ruffian.library:RTextView:1.0.6'
+    //QMUI
+    compile 'com.qmuiteam:qmui:1.0.6'
 
 }
 repositories {

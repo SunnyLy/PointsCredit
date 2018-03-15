@@ -1,6 +1,7 @@
 package com.michel.pointscredit.view.widget;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -30,10 +31,6 @@ public class SimplexToast {
         return mToast;
     }
 
-    public static void show(String content) {
-        show(content, Toast.LENGTH_SHORT);
-    }
-
     public static void show(String content, int duration) {
         show(null, content, Gravity.BOTTOM, duration);
     }
@@ -50,7 +47,7 @@ public class SimplexToast {
         show(context, content, gravity, Toast.LENGTH_SHORT);
     }
 
-    public static void show(Context context, String content, int gravity, int duration) {
+    public static void show(@NonNull Context context, String content, int gravity, int duration) {
         long current = System.currentTimeMillis();
         //if (current < nextTimeMillis) return;
         if (mToast == null) init(context.getApplicationContext());

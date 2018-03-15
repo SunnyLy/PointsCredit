@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -20,10 +21,14 @@ import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.User;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
+import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +55,8 @@ public class LoginActivity extends PCBaseActivity {
     @BindView(R.id.login_title)
     PCCommonTitleLayout mTitleBar;
 
-    private ProgressDialog mProgressDialog;
+    private QMUIDialog mInfoDialog;
+    private QMUITipDialog mProgressDialog;
 
     public static void startLoginActy(@NonNull Context context, @NonNull String email) {
         Intent loginIntent = new Intent(context, LoginActivity.class);
@@ -67,7 +73,12 @@ public class LoginActivity extends PCBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setViewsOnClickListener(mBtnLogin, mBtnReg, mTvForget, mTitleBar.getLeftBackView());
-        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog =
+                new QMUITipDialog.Builder(this)
+                        .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                        .setTipWord("登录中，请稍候……")
+                        .create();
+
         Intent intent = getIntent();
         if (intent != null) {
             mEmail = intent.getStringExtra("email");
@@ -81,26 +92,56 @@ public class LoginActivity extends PCBaseActivity {
     public void onClick(@Nullable View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                mProgressDialog.setMessage("登录中，请稍候……");
-                mProgressDialog.show();
-                User.logInInBackground(mEtEmail.getText().toString(), mEtPwd.getText().toString(), new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException e) {
-                        mProgressDialog.dismiss();
-                        if (user != null) {
-                            Log.e("pc", "login:" + user.toString());
+                String strEmail = mEtEmail.getText().toString();
+                String strPwd = mEtPwd.getText().toString();
+                String tips = "";
+                if (TextUtils.isEmpty(strEmail)) {
+                    tips = getResources().getString(R.string.InputEmail);
+                    mInfoDialog = new QMUIDialog.MessageDialogBuilder(this)
+                            .setMessage(tips)
+                            .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
+                                @Override
+                                public void onClick(QMUIDialog dialog, int index) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(strPwd)) {
+                    tips = getResources().getString(R.string.InputPWD);
+                    mInfoDialog = new QMUIDialog.MessageDialogBuilder(this)
+                            .setMessage(tips)
+                            .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
+                                @Override
+                                public void onClick(QMUIDialog dialog, int index) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(strEmail) && !TextUtils.isEmpty(strPwd)) {
+                    mProgressDialog.show();
+                    User.logInInBackground(mEtEmail.getText().toString(), mEtPwd.getText().toString(), new LogInCallback() {
+                        @Override
+                        public void done(ParseUser user, ParseException e) {
+                            mProgressDialog.dismiss();
+                            if (user != null) {
+                                Log.e("pc", "login:" + user.toString());
+                            }
+                            if (e != null) {
+                                Log.e("pc", e.getMessage());
+                                SimplexToast.show(LoginActivity.this, e.getMessage());
+                            } else {
+                                SimplexToast.show(LoginActivity.this, getResources().getString(R.string.Succeeded));
+                                Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(homeIntent);
+                                finish();
+                            }
                         }
-                        if (e != null) {
-                            Log.e("pc", e.getMessage());
-                            Toast.makeText(LoginActivity.this, "登录失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                            Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(homeIntent);
-                            finish();
-                        }
-                    }
-                });
+                    });
+                }
+
                 break;
             case R.id.tv_login_forget:
                 showEmailDialog();
@@ -116,37 +157,36 @@ public class LoginActivity extends PCBaseActivity {
     }
 
     private void showEmailDialog() {
-        final EditText etEmail = new EditText(this);
-        new AlertDialog.Builder(this)
-                .setTitle(getResources().getString(R.string.InputEmail))
-                .setView(etEmail)
-                .setPositiveButton(getResources().getString(R.string.Confirm), new DialogInterface.OnClickListener() {
+        final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(this);
+        builder.setTitle(getResources().getString(R.string.InputEmail))
+                .setPlaceholder(getResources().getString(R.string.Email))
+                .setInputType(InputType.TYPE_CLASS_TEXT)
+                .addAction(getResources().getString(R.string.Cancel), new QMUIDialogAction.ActionListener() {
                     @Override
-                    public void onClick(final DialogInterface dialogInterface, int i) {
-                        //确认
-                        String strEmail = etEmail.getText().toString();
-                        if (TextUtils.isEmpty(strEmail)) {
-                            Toast.makeText(LoginActivity.this, getResources().getString(R.string.InputEmail), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        User.requestPasswordResetInBackground(strEmail, new RequestPasswordResetCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.CheckMailbox), Toast.LENGTH_SHORT).show();
-                                    dialogInterface.dismiss();
-                                }
-                            }
-                        });
-
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
                     }
                 })
-                .setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        //取消
-                        if (dialog != null) dialog.dismiss();
+                    public void onClick(final QMUIDialog dialog, int index) {
+                        CharSequence text = builder.getEditText().getText();
+                        if (text != null && text.length() > 0) {
+                            User.requestPasswordResetInBackground(text.toString(), new RequestPasswordResetCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        SimplexToast.show(LoginActivity.this, getResources().getString(R.string.CheckMailbox));
+                                        dialog.dismiss();
+                                    }
+                                }
+                            });
+
+                        } else {
+                            SimplexToast.show(LoginActivity.this, getResources().getString(R.string.InputEmail));
+                        }
                     }
-                }).show();
+                })
+                .show();
     }
 }

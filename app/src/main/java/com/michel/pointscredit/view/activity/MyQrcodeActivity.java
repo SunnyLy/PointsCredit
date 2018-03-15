@@ -97,6 +97,7 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
     public void onClick(@Nullable View view) {
         switch (view.getId()) {
             case R.id.iv_back:
+                finish();
                 break;
             case R.id.title_layout_share:
                 String state = Environment.getExternalStorageState();
@@ -111,6 +112,11 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
         }
     }
 
+    /**
+     * 保存二维码至SD卡
+     *
+     * @return
+     */
     private Uri saveBitmap() {
         if (bitmap == null) return null;
         File appDir = new File(DIR);
@@ -133,6 +139,11 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
         return null;
     }
 
+    /**
+     * 开始调用 系统的分享
+     *
+     * @param uri
+     */
     private void startShare(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

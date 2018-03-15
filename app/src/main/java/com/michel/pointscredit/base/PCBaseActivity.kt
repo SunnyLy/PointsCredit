@@ -11,6 +11,9 @@ import android.view.Window
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import android.view.WindowManager
+import com.michel.pointscredit.R
+import com.michel.pointscredit.utils.MatrialStatusBarUtils
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 
 
 /**
@@ -25,6 +28,15 @@ abstract class PCBaseActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        QMUIStatusBarHelper.translucent(this) // 沉浸式状态栏
+        //当系统版本为4.4或者4.4以上时可以使用沉浸式状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明状态栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            //透明导航栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        }
+
         mContext = this
         setContentView(getLayoutId())
         unbinder = ButterKnife.bind(this)
