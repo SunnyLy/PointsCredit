@@ -2,6 +2,7 @@ package com.michel.pointscredit.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.google.zxing.BarcodeFormat;
@@ -19,6 +20,9 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
 import java.util.Hashtable;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 /**
  * Created by 80010651 on 2018/3/13.
@@ -45,7 +49,9 @@ public class QrCodeUtils {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (matrix.get(x, y)) {
-                    pixels[y * width + x] = 0xff000000;
+                    pixels[y * width + x] = Color.BLACK;
+                } else {
+                    pixels[y * width + x] = Color.WHITE;
                 }
 
             }
@@ -84,7 +90,7 @@ public class QrCodeUtils {
         int width = scanBitmap.getWidth();
         int height = scanBitmap.getHeight();
         int[] pixels = new int[width * height];
-        scanBitmap.getPixels(pixels,0,width,0,0,width,height);
+        scanBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
         RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
         BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
         QRCodeReader reader = new QRCodeReader();

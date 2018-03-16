@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     tools:context="com.michel.pointscredit.view.activity.WelcomeActivity">
 
     <TextView
@@ -61,7 +61,7 @@
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="47dp"
         android:layout_marginRight="47dp"
-        android:background="@drawable/round_rectangle_white"
+        android:background="@drawable/round_rectangle_stroke_4d415fb6"
         android:text="@string/I_am_a_new_user"
         android:textAllCaps="false"
         android:textColor="@color/color_6581F0" />

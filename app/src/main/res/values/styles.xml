@@ -20,8 +20,11 @@
         <item name="android:textColorPrimary">@color/black_alpha_240</item>
     </style>
 
-    <style name="PCEditText" parent="EditText.Compat">
-        <!--<item name="android:background">@android:drawable/edit_text</item>-->
+    <!--登录界面的EditText样式-->
+    <style name="PC.Login.EditText" parent="EditText.Compat">
+        <item name="android:background">@drawable/round_rectangle_stroke_ffeeeeee</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
     </style>
 
 </resources>

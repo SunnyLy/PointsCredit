@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -123,13 +124,17 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
         if (!appDir.exists()) {
             appDir.mkdir();
         }
-        String fileName = FILE_NAME + ".jpg";
-        File file = new File(appDir, fileName);
-        if (file.exists()) file.delete();
+
+        File file = new File(DIR);
+        if (!file.exists()) file.mkdirs();
+        file = new File(file.getAbsoluteFile(), "qrcode.png");
+//        if (file.exists()) file.delete();
+
         FileOutputStream out = null;
         try {
             ImageUtils.saveImageToSD(MyQrcodeActivity.this, file.getAbsolutePath(), bitmap, 100);
-            Uri uri = Uri.parse(file.getAbsolutePath());
+//            Uri uri = Uri.parse(file.getAbsolutePath());
+            Uri uri = FileProvider.getUriForFile(MyQrcodeActivity.this, "com.michel.pointscredit", file);
             return uri;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -19,8 +19,11 @@ import android.widget.Toast;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.User;
+import com.michel.pointscredit.callback.IPositiveClickListener;
+import com.michel.pointscredit.utils.PCStringUtils;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
+import com.michel.pointscredit.view.widget.PCDialogManger;
 import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -95,53 +98,11 @@ public class LoginActivity extends PCBaseActivity {
                 String strEmail = mEtEmail.getText().toString();
                 String strPwd = mEtPwd.getText().toString();
                 String tips = "";
-                if (TextUtils.isEmpty(strEmail)) {
-                    tips = getResources().getString(R.string.InputEmail);
-                    mInfoDialog = new QMUIDialog.MessageDialogBuilder(this)
-                            .setMessage(tips)
-                            .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
-                                @Override
-                                public void onClick(QMUIDialog dialog, int index) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                    return;
+                tips = judgeSth(strEmail, strPwd, tips);
+                if (!TextUtils.isEmpty(tips)) {
+                    break;
                 }
-                if (TextUtils.isEmpty(strPwd)) {
-                    tips = getResources().getString(R.string.InputPWD);
-                    mInfoDialog = new QMUIDialog.MessageDialogBuilder(this)
-                            .setMessage(tips)
-                            .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
-                                @Override
-                                public void onClick(QMUIDialog dialog, int index) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                    return;
-                }
-
-                if (!TextUtils.isEmpty(strEmail) && !TextUtils.isEmpty(strPwd)) {
-                    mProgressDialog.show();
-                    User.logInInBackground(mEtEmail.getText().toString(), mEtPwd.getText().toString(), new LogInCallback() {
-                        @Override
-                        public void done(ParseUser user, ParseException e) {
-                            mProgressDialog.dismiss();
-                            if (user != null) {
-                                Log.e("pc", "login:" + user.toString());
-                            }
-                            if (e != null) {
-                                Log.e("pc", e.getMessage());
-                                SimplexToast.show(LoginActivity.this, e.getMessage());
-                            } else {
-                                SimplexToast.show(LoginActivity.this, getResources().getString(R.string.Succeeded));
-                                Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                                startActivity(homeIntent);
-                                finish();
-                            }
-                        }
-                    });
-                }
-
+                stratLogin(strEmail, strPwd);
                 break;
             case R.id.tv_login_forget:
                 showEmailDialog();
@@ -156,23 +117,79 @@ public class LoginActivity extends PCBaseActivity {
         }
     }
 
+    /**
+     * 开始登录
+     *
+     * @param strEmail
+     * @param strPwd
+     */
+    private void stratLogin(String strEmail, String strPwd) {
+        mProgressDialog.show();
+        User.logInInBackground(strEmail, strPwd, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                mProgressDialog.dismiss();
+                if (user != null) {
+                    Log.e("pc", "login:" + user.toString());
+                }
+                if (e != null) {
+                    Log.e("pc", e.getMessage());
+                    SimplexToast.show(LoginActivity.this, e.getMessage());
+                } else {
+                    SimplexToast.show(LoginActivity.this, getResources().getString(R.string.Succeeded));
+                    Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(homeIntent);
+                    finish();
+                }
+            }
+        });
+    }
+
+    /**
+     * 规则判断
+     *
+     * @param strEmail
+     * @param strPwd
+     * @param tips
+     * @return
+     */
+    private String judgeSth(String strEmail, String strPwd, String tips) {
+        if (TextUtils.isEmpty(strEmail) && !TextUtils.isEmpty(strPwd)) {
+            tips = getResources().getString(R.string.InputEmail);
+        } else if (TextUtils.isEmpty(strPwd) && !TextUtils.isEmpty(strEmail)) {
+            tips = getResources().getString(R.string.InputPWD);
+        } else if (TextUtils.isEmpty(strEmail) && TextUtils.isEmpty(strPwd)) {
+            tips = getResources().getString(R.string.InputEmail);
+        } else if (!TextUtils.isEmpty(strEmail) && !PCStringUtils.isEmail(strEmail)) {//邮箱校验
+            tips = getResources().getString(R.string.InputValidEmail);
+        } else if (!TextUtils.isEmpty(strPwd) && !PCStringUtils.isRightPWDForm(strPwd)) {//密码校验
+            tips = getResources().getString(R.string.PWDForm);
+        }
+        showTipsDialog(tips);
+        return tips;
+    }
+
+    private void showTipsDialog(String tips) {
+        PCDialogManger.showCommonDialog(this, null, tips, null, new QMUIDialogAction.ActionListener() {
+            @Override
+            public void onClick(QMUIDialog dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+    }
+
     private void showEmailDialog() {
-        final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(this);
-        builder.setTitle(getResources().getString(R.string.InputEmail))
-                .setPlaceholder(getResources().getString(R.string.Email))
-                .setInputType(InputType.TYPE_CLASS_TEXT)
-                .addAction(getResources().getString(R.string.Cancel), new QMUIDialogAction.ActionListener() {
+        PCDialogManger.showEditableDialog(this, getResources().getString(R.string.InputEmail),
+                getResources().getString(R.string.Email),
+                null, new IPositiveClickListener() {
                     @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
-                })
-                .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(final QMUIDialog dialog, int index) {
-                        CharSequence text = builder.getEditText().getText();
-                        if (text != null && text.length() > 0) {
-                            User.requestPasswordResetInBackground(text.toString(), new RequestPasswordResetCallback() {
+                    public void onPositiveClick(String msg, final QMUIDialog dialog) {
+                        if (!TextUtils.isEmpty(msg)) {
+                            if (!PCStringUtils.isEmail(msg)) {
+                                SimplexToast.show(LoginActivity.this, getResources().getString(R.string.InputValidEmail));
+                                return;
+                            }
+                            User.requestPasswordResetInBackground(msg, new RequestPasswordResetCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null) {
@@ -186,7 +203,37 @@ public class LoginActivity extends PCBaseActivity {
                             SimplexToast.show(LoginActivity.this, getResources().getString(R.string.InputEmail));
                         }
                     }
-                })
-                .show();
+                });
+//        final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(this);
+//        builder.setTitle(getResources().getString(R.string.InputEmail))
+//                .setPlaceholder(getResources().getString(R.string.Email))
+//                .setInputType(InputType.TYPE_CLASS_TEXT)
+//                .addAction(getResources().getString(R.string.Cancel), new QMUIDialogAction.ActionListener() {
+//                    @Override
+//                    public void onClick(QMUIDialog dialog, int index) {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .addAction(getResources().getString(R.string.Confirm), new QMUIDialogAction.ActionListener() {
+//                    @Override
+//                    public void onClick(final QMUIDialog dialog, int index) {
+//                        CharSequence text = builder.getEditText().getText();
+//                        if (text != null && text.length() > 0) {
+//                            User.requestPasswordResetInBackground(text.toString(), new RequestPasswordResetCallback() {
+//                                @Override
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        SimplexToast.show(LoginActivity.this, getResources().getString(R.string.CheckMailbox));
+//                                        dialog.dismiss();
+//                                    }
+//                                }
+//                            });
+//
+//                        } else {
+//                            SimplexToast.show(LoginActivity.this, getResources().getString(R.string.InputEmail));
+//                        }
+//                    }
+//                })
+//                .show();
     }
 }

@@ -44,4 +44,5 @@
     <string name="str_request_sd_message">请求获取手机存储权限</string>
     <string name="permissions_camera_error">相机无法完成初始化,请正确授权。</string>
     <string name="permissions_external_error">图片存储失败,请正确授权。</string>
+    <string name="scan_no_content">未掃描到內容</string>
 </resources>

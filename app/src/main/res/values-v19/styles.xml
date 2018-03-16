@@ -21,8 +21,4 @@
         <item name="android:textColorPrimary">@color/black_alpha_240</item>
     </style>
 
-    <style name="PCEditText" parent="EditText.Compat">
-        <!--<item name="android:background">@android:drawable/edit_text</item>-->
-    </style>
-
 </resources>

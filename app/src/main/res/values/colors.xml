@@ -23,4 +23,6 @@
     <color name="color_722BFF">#722BFF</color>
     <color name="color_527FFF">#527fff</color>
     <color name="color_4D415FB6">#4D415FB6</color>
+    <color name="color_FFEEEEEE">#FFEEEEEE</color>
+    <color name="qmui_config_color_link">@color/colorPrimary</color>
 </resources>

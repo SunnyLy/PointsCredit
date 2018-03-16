@@ -128,11 +128,6 @@ public class HomeActivity extends PCBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //扫描结果回调
-        if (resultCode == RESULT_OK) { //RESULT_OK = -1
-
-        }
-
         //在相册里面选择好相片之后调回到现在的这个activity中
         switch (requestCode) {
             case IMAGE_REQUEST_CODE:
@@ -143,7 +138,7 @@ public class HomeActivity extends PCBaseActivity {
                        if (result != null && !TextUtils.isEmpty(result.getText())){
                            SimplexToast.show(HomeActivity.this,result.getText());
                        }else{
-                           SimplexToast.show(HomeActivity.this,"未掃描到內容");
+                           SimplexToast.show(HomeActivity.this,getResources().getString(R.string.scan_no_content));
                        }
                     }
                 }

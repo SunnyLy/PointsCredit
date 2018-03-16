@@ -27,19 +27,18 @@
 
         </activity>
         <activity android:name=".view.activity.PCSplashActivity">
-            <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />
+         </intent-filter>
         </activity>
-        <activity android:name=".view.activity.LoginActivity"
-            />
+        <activity android:name=".view.activity.LoginActivity" />
         <activity android:name=".view.activity.RegisterActivity" />
         <activity android:name=".view.activity.HomeActivity">
-           <!-- <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>-->
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity android:name=".view.activity.TransactionActivity" />
         <activity
@@ -47,6 +46,16 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
         <activity android:name=".view.activity.MyQrcodeActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.michel.pointscredit"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/pointscredit_file_path" />
+        </provider>
     </application>
 
 </manifest>

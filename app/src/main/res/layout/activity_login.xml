@@ -2,15 +2,14 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <com.michel.pointscredit.view.widget.PCCommonTitleLayout
         android:id="@+id/login_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:clipToPadding="true"
+        android:fitsSystemWindows="true"
         app:title_content="@string/Connect" />
 
     <ImageView
@@ -37,6 +36,7 @@
 
     <EditText
         android:id="@+id/et_login_pwd"
+        style="@style/PC.Login.EditText"
         android:layout_width="263dp"
         android:layout_height="43dp"
         android:layout_marginBottom="8dp"
@@ -57,6 +57,7 @@
 
     <EditText
         android:id="@+id/et_login_email"
+        style="@style/PC.Login.EditText"
         android:layout_width="261dp"
         android:layout_height="43dp"
         android:layout_marginEnd="8dp"
