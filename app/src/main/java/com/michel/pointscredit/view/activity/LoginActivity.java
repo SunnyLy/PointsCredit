@@ -84,7 +84,7 @@ public class LoginActivity extends PCBaseActivity {
         mEtPwd = mPcEtPwd.getEdiText();
         mEtPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         mEtEmail = mPcEtAccount.getEdiText();
-        mEtPwd.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mEtEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
         mProgressDialog =
                 new QMUITipDialog.Builder(this)
