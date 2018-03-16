@@ -19,6 +19,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/et_login_email"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_user" />
@@ -28,15 +29,15 @@
         android:layout_width="42dp"
         android:layout_height="20dp"
         android:layout_marginBottom="12dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/et_login_pwd"
         app:layout_constraintEnd_toStartOf="@+id/et_login_pwd"
         app:layout_constraintHorizontal_bias="0.603"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/login_ic_lock" />
 
-    <EditText
+    <com.michel.pointscredit.view.widget.PCEditText
         android:id="@+id/et_login_pwd"
-        style="@style/PC.Login.EditText"
         android:layout_width="263dp"
         android:layout_height="43dp"
         android:layout_marginBottom="8dp"
@@ -44,10 +45,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="@string/Password"
-        android:inputType="textPassword"
         android:textColor="@color/color_6492FF"
         android:textSize="13sp"
+        app:et_hint="@string/Password"
+        app:et_icon_src="@drawable/iclock"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.419"
@@ -55,19 +56,19 @@
         app:layout_constraintTop_toBottomOf="@+id/et_login_email"
         app:layout_constraintVertical_bias="0.08" />
 
-    <EditText
+    <com.michel.pointscredit.view.widget.PCEditText
         android:id="@+id/et_login_email"
-        style="@style/PC.Login.EditText"
         android:layout_width="261dp"
         android:layout_height="43dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="57dp"
         android:ems="10"
-        android:hint="@string/Email"
         android:inputType="textEmailAddress"
         android:textColor="@color/color_6492FF"
         android:textSize="13sp"
+        app:et_hint="@string/Email"
+        app:et_icon_src="@drawable/ic_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.393"
         app:layout_constraintStart_toEndOf="@+id/imageView4"

@@ -24,6 +24,7 @@ import com.michel.pointscredit.utils.PCStringUtils;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.michel.pointscredit.view.widget.PCDialogManger;
+import com.michel.pointscredit.view.widget.PCEditText;
 import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -45,9 +46,9 @@ import butterknife.BindView;
 public class LoginActivity extends PCBaseActivity {
 
     private String mEmail;
-    @BindView(R.id.et_login_email)
+    //    @BindView(R.id.et_login_email)
     EditText mEtEmail;
-    @BindView(R.id.et_login_pwd)
+    //    @BindView(R.id.et_login_pwd)
     EditText mEtPwd;
     @BindView(R.id.btn_login)
     Button mBtnLogin;
@@ -57,6 +58,10 @@ public class LoginActivity extends PCBaseActivity {
     TextView mTvForget;
     @BindView(R.id.login_title)
     PCCommonTitleLayout mTitleBar;
+    @BindView(R.id.et_login_pwd)
+    PCEditText mPcEtPwd;
+    @BindView(R.id.et_login_email)
+    PCEditText mPcEtAccount;
 
     private QMUIDialog mInfoDialog;
     private QMUITipDialog mProgressDialog;
@@ -76,6 +81,11 @@ public class LoginActivity extends PCBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setViewsOnClickListener(mBtnLogin, mBtnReg, mTvForget, mTitleBar.getLeftBackView());
+        mEtPwd = mPcEtPwd.getEdiText();
+        mEtPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        mEtEmail = mPcEtAccount.getEdiText();
+        mEtPwd.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
         mProgressDialog =
                 new QMUITipDialog.Builder(this)
                         .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)

@@ -14,6 +14,7 @@ import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.User;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
+import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.ParseException;
 import com.parse.SignUpCallback;
 
@@ -66,7 +67,7 @@ public class RegisterActivity extends PCBaseActivity {
     public void onClick(@Nullable View view) {
         switch (view.getId()) {
             case R.id.btn_reg:
-                mPD.setMessage("注册中，请稍候……");
+                mPD.setMessage(getResources().getString(R.string.reg_ing));
                 mPD.show();
                 mUser.setContactEmail(mEtEmail.getText().toString());
                 mUser.setEmail(mEtEmail.getText().toString());
@@ -80,10 +81,10 @@ public class RegisterActivity extends PCBaseActivity {
                     public void done(ParseException e) {
                         mPD.dismiss();
                         if (e != null) {
-                            Toast.makeText(RegisterActivity.this, "code:" + e.getCause() + "\ntrace:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            SimplexToast.show(RegisterActivity.this, e.getMessage());
                             Log.e("PC:reg", e.getMessage());
                         } else {
-                            Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                            SimplexToast.show(RegisterActivity.this,getResources().getString(R.string.reg_success));
                             Intent homeIntent = new Intent(RegisterActivity.this, HomeActivity.class);
                             startActivity(homeIntent);
                             finish();

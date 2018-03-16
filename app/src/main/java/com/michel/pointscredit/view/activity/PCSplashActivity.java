@@ -25,24 +25,21 @@ public class PCSplashActivity extends PCBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUser =  ParseUser.getCurrentUser();
+        mUser = ParseUser.getCurrentUser();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (mUser != null) {
             //已经登录过，
             String email = mUser.getEmail();
             mUser.logOut();
             LoginActivity.startLoginActy(this, email);
-        }else{
+        } else {
             Intent intent = new Intent(PCSplashActivity.this, WelcomeActivity.class);
             PCSplashActivity.this.startActivity(intent);
         }
         finish();
-//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent(PCSplashActivity.this, WelcomeActivity.class);
-//                PCSplashActivity.this.startActivity(intent);
-//                finish();
-//            }
-//        }, 1000);
     }
 }
