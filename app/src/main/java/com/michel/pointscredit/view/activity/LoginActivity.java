@@ -175,6 +175,7 @@ public class LoginActivity extends PCBaseActivity {
         } else if (!TextUtils.isEmpty(strPwd) && !PCStringUtils.isRightPWDForm(strPwd)) {//密码校验
             tips = getResources().getString(R.string.PWDForm);
         }
+        if (!TextUtils.isEmpty(tips))
         showTipsDialog(tips);
         return tips;
     }

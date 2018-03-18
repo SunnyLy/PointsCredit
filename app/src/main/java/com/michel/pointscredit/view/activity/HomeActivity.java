@@ -17,20 +17,25 @@ import com.google.zxing.Result;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.Transaction;
+import com.michel.pointscredit.bean.User;
 import com.michel.pointscredit.google.zxing.activity.CaptureActivity;
 import com.michel.pointscredit.utils.QrCodeUtils;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.ruffian.library.RTextView;
 
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -61,7 +66,8 @@ public class HomeActivity extends PCBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setViewsOnClickListener(mTransaction, mBtnScan, mBtnQrcode, mBtnTransfer, mTitleBar.getLeftBackView());
+        setViewsOnClickListener(mTransaction, mBtnScan, mBtnQrcode, mBtnTransfer, mTitleBar
+                .getLeftBackView());
         ParseQuery<Transaction> parseQuery = ParseQuery.getQuery(Transaction.TAG);
         if (ParseUser.getCurrentUser() == null) return;
         //objectId:EHWkHpMtD7
@@ -78,6 +84,8 @@ public class HomeActivity extends PCBaseActivity {
                 Log.e("pc:home", e == null ? "e==null" : e.getMessage());
             }
         });
+
+        showTransferDialog("EHWkHpMtD7");
     }
 
     @Override
@@ -113,9 +121,8 @@ public class HomeActivity extends PCBaseActivity {
      */
     private void openGallery() {
         //在这里跳转到手机系统相册里面
-        Intent intent = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media
+                .EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, IMAGE_REQUEST_CODE);
     }
 
@@ -133,48 +140,77 @@ public class HomeActivity extends PCBaseActivity {
             case IMAGE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {//resultcode是setResult里面设置的code值
                     String path = getImagPath(data);
-                    if (!TextUtils.isEmpty(path)){
-                       Result result =  QrCodeUtils.scanningImage(path);
-                       if (result != null && !TextUtils.isEmpty(result.getText())){
-                           SimplexToast.show(HomeActivity.this,result.getText());
-                       }else{
-                           SimplexToast.show(HomeActivity.this,getResources().getString(R.string.scan_no_content));
-                       }
+                    if (!TextUtils.isEmpty(path)) {
+                        Result result = QrCodeUtils.scanningImage(path);
+                        if (result != null && !TextUtils.isEmpty(result.getText())) {
+                            showTransferDialog(result.getText());
+                            SimplexToast.show(HomeActivity.this, result.getText());
+                        } else {
+                            SimplexToast.show(HomeActivity.this, getResources().getString(R
+                                    .string.scan_no_content));
+                        }
                     }
                 }
                 break;
 
             case REQUEST_CODE:
                 //二维码扫描结果
-                if (data == null)return;
+                if (data == null) return;
                 Bundle bundle = data.getExtras();
                 String scanResult = bundle.getString(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN);
                 //将扫描出的信息显示出来
-                SimplexToast.show(HomeActivity.this,scanResult);
+                SimplexToast.show(HomeActivity.this, scanResult);
                 break;
         }
     }
 
     /**
+     * 根据扫描到的ObjectId,读取UserName.并显示Dialog
+     *
+     * @param text
+     */
+    private void showTransferDialog(String text) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        if (query != null) {
+            query.getInBackground(text,new GetCallback<ParseUser>() {
+                @Override
+                public void done(ParseUser object, ParseException e) {
+                    if (object != null) {
+                        try{
+                            SimplexToast.show(HomeActivity.this, object.getString("firstName"));
+                        }catch (ClassCastException e1){
+                            SimplexToast.show(HomeActivity.this, "查询错误::类型转换错误:"+e1.getMessage());
+                        }
+                    } else {
+                        SimplexToast.show(mContext, "查询错误");
+                    }
+                }
+            });
+        }
+
+    }
+
+    /**
      * 獲取选择的照片的路径
+     *
      * @param data
      * @return
      */
     private String getImagPath(Intent data) {
-        Cursor cursor=null;
-        String  path=null;
+        Cursor cursor = null;
+        String path = null;
         try {
             Uri selectedImage = data.getData(); //获取系统返回的照片的Uri
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
+            cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            //从系统表中查询指定Uri对应的照片
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             path = cursor.getString(columnIndex);  //获取照片路径
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if (cursor != null){
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }

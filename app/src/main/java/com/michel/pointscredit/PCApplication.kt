@@ -13,8 +13,8 @@ class PCApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        ParseObject.registerSubclass(User::class.java)
         ParseObject.registerSubclass(Transaction::class.java)
+        ParseObject.registerSubclass(User::class.java)
         Parse.initialize(Parse.Configuration.Builder(this)
                 .applicationId("POINTS_CREDIT_PARSE_APP_ID")
                 .server("https://points-credit.herokuapp.com/parse")
