@@ -11,4 +11,12 @@
         android:layout_alignParentTop="true"
         app:title_content="@string/Transactions" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/transaction_listview"
+        android:layout_margin="5dp"
+        android:layout_below="@+id/transaction_title"
+        android:background="@drawable/round_rectangle_blue_stroke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.michel.pointscredit.utils.MatrialStatusBarUtils;
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -23,6 +24,7 @@ public abstract class PCBaseActivity extends AppCompatActivity implements View.O
 
     public Context mContext;
     private Unbinder unbinder;
+    public QMUITipDialog mLoading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,9 +44,37 @@ public abstract class PCBaseActivity extends AppCompatActivity implements View.O
         if (unbinder != null) {
             unbinder.unbind();
         }
+
+        if (mLoading != null && mLoading.isShowing()){
+            mLoading.dismiss();
+            mLoading = null;
+        }
+    }
+
+    public void showLoading(){
+        if (mLoading == null){
+            mLoading = new QMUITipDialog.Builder(this)
+                    .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                    .create();
+        }
+        if (mLoading != null && !mLoading.isShowing()){
+            mLoading.show();
+        }
+    }
+
+    public void dismissLoading(){
+        if (mLoading != null && mLoading.isShowing()){
+            mLoading.dismiss();
+            mLoading = null;
+        }
     }
 
     public void initParams() {
+        if (mLoading == null){
+//            mLoading = new QMUITipDialog.Builder(this)
+//                    .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+//                    .create();
+        }
 
     }
 
@@ -65,5 +95,6 @@ public abstract class PCBaseActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
 
     }
+
 }
 

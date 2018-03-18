@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,11 +18,14 @@ import com.google.zxing.Result;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.Transaction;
+import com.michel.pointscredit.bean.TrascationItemBean;
 import com.michel.pointscredit.bean.User;
+import com.michel.pointscredit.callback.IPositiveClickListener;
 import com.michel.pointscredit.google.zxing.activity.CaptureActivity;
 import com.michel.pointscredit.utils.QrCodeUtils;
 import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
+import com.michel.pointscredit.view.widget.PCDialogManger;
 import com.michel.pointscredit.view.widget.SimplexToast;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -29,11 +33,20 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.ruffian.library.RTextView;
 
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 
+import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +60,8 @@ public class HomeActivity extends PCBaseActivity {
     private static final int IMAGE_REQUEST_CODE = 0x101;
     @BindView(R.id.tv_transactions)
     TextView mTransaction;
+    @BindView(R.id.tv_account_sum)
+    TextView mAccountSum;//账户余额
     @BindView(R.id.btn_scan)
     RTextView mBtnScan;
     @BindView(R.id.btn_qrcode)
@@ -58,41 +73,141 @@ public class HomeActivity extends PCBaseActivity {
 
     private static final int REQUEST_CODE = 0x100;
 
+    private boolean isAdmin;
+    private ArrayList<TrascationItemBean> mTransactions = new ArrayList<>();
+
+    private ArrayList<ParseObject> parseObjects = new ArrayList<>();
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_home;
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setViewsOnClickListener(mTransaction, mBtnScan, mBtnQrcode, mBtnTransfer, mTitleBar
                 .getLeftBackView());
-        ParseQuery<Transaction> parseQuery = ParseQuery.getQuery(Transaction.TAG);
         if (ParseUser.getCurrentUser() == null) return;
+        isAdmin = ParseUser.getCurrentUser().getBoolean("isAdmin");
         //objectId:EHWkHpMtD7
-        Log.e("pc:home", "objectId=" + ParseUser.getCurrentUser().getObjectId());
+        getTranstactions();
+    }
+
+//    private void getTranstactions() {
+//        final ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Transaction.TAG);
+//        showLoading();
+//        Log.e("pc:home", "objectId=" + ParseUser.getCurrentUser().getObjectId());
+//        parseQuery.whereContains("users", "4LoVmT5twu");
+////        parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
+//        parseQuery.setLimit(1000);//最多拉取1000条数据
+//        parseQuery.findInBackground(new FindCallback<ParseObject>() {
+//            @Override
+//            public void done(List<ParseObject> objects, ParseException e) {
+//                dismissLoading();
+//                if (objects != null && objects.size() > 0) {
+//                    Log.e("pc:home", "transactions:" + objects.size());
+//                    parseObjects.clear();
+//                    parseObjects.addAll(objects);
+//                    double sum=0;
+//                    for (ParseObject transaction:objects){
+//                        double amount = transaction.getDouble("amount");
+//                        Log.e("pc","amount:"+amount);
+//                        sum += amount;
+//                    }
+//                    freshUI(sum);
+//                }
+//                Log.e("pc:home", e == null ? "e==null" : e.getMessage());
+//            }
+//        });
+//    }
+
+    private void getTranstactions() {
+        final ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Transaction.TAG);
+        showLoading();
         parseQuery.whereContains("users", "4LoVmT5twu");
 //        parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
         parseQuery.setLimit(1000);//最多拉取1000条数据
-        parseQuery.findInBackground(new FindCallback<Transaction>() {
+        parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<Transaction> objects, ParseException e) {
+            public void done(List<ParseObject> objects, ParseException e) {
                 if (objects != null && objects.size() > 0) {
                     Log.e("pc:home", "transactions:" + objects.size());
+                    mTransactions.clear();
+                    double sum=0;
+                    for (ParseObject transaction:objects){
+                        double amount = transaction.getDouble("amount");
+                        Log.e("pc","amount:"+amount);
+                        sum += amount;
+                        TrascationItemBean itemBean = transferPO2Bean(transaction);
+                        if (itemBean != null)
+                            mTransactions.add(itemBean);
+                    }
+                    dismissLoading();
+                    freshUI(sum);
+                }else{
+                    dismissLoading();
                 }
                 Log.e("pc:home", e == null ? "e==null" : e.getMessage());
             }
         });
+    }
 
-        showTransferDialog("EHWkHpMtD7");
+    private TrascationItemBean transferPO2Bean(ParseObject object) {
+        TrascationItemBean itemBean = null;
+        if (object != null){
+            itemBean = new TrascationItemBean();
+            ParseUser fromUser = object.getParseUser("from");
+            ParseUser toUser = object.getParseUser("to");
+            String fromUserId = fromUser.getObjectId();
+
+            String userName = "";
+            String amount;
+            boolean isOut = false;//是不是轉出去
+            if (fromUserId.equals(ParseUser.getCurrentUser().getObjectId())){
+                //我轉出去的
+                try {
+                    userName = toUser.fetchIfNeeded().getString("firstName");
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                isOut = true;
+            }else{
+                //別人轉給我的
+                try {
+                    userName = fromUser.fetchIfNeeded().getString("firstName");
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                isOut = false;
+            }
+            itemBean.setUserName(userName);
+            itemBean.setOut(isOut);
+            Double dbMoney = object.getDouble("amount");
+            DecimalFormat df = new DecimalFormat("#.000");
+            String  money = "€"+df.format(dbMoney);
+            itemBean.setSum(money);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date date = object.getUpdatedAt();
+            itemBean.setUpdateTime(sdf.format(date));
+        }
+        return itemBean;
+    }
+
+    /**
+     * 賬戶余額，刷新界面
+     * @param sum
+     */
+    private void freshUI(double sum) {
+
+        mAccountSum.setText(new DecimalFormat("#.000").format(sum>=0?sum:0.0));
     }
 
     @Override
     public void onClick(@Nullable View view) {
         switch (view.getId()) {
             case R.id.tv_transactions:
-                TransactionActivity.startTransactionActivity(this);
+                TransactionActivity.startTransactionActivity(this,mTransactions);
                 break;
             case R.id.btn_scan:
                 RouterUtils.jump2TargetForResult(this, CaptureActivity.class, REQUEST_CODE);
@@ -105,7 +220,6 @@ public class HomeActivity extends PCBaseActivity {
                     params.putString(MyQrcodeActivity.USER_ID, userId);
                     RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
                 }
-//                test();
                 break;
             case R.id.iv_back:
                 finish();
@@ -143,8 +257,12 @@ public class HomeActivity extends PCBaseActivity {
                     if (!TextUtils.isEmpty(path)) {
                         Result result = QrCodeUtils.scanningImage(path);
                         if (result != null && !TextUtils.isEmpty(result.getText())) {
+                            if (result.getText().equals(ParseUser.getCurrentUser().getObjectId())){
+                                SimplexToast.show(mContext,mContext.getResources().getString(R.string.not_transfer_to_self));
+                                return;
+                            }
+                            showLoading();
                             showTransferDialog(result.getText());
-                            SimplexToast.show(HomeActivity.this, result.getText());
                         } else {
                             SimplexToast.show(HomeActivity.this, getResources().getString(R
                                     .string.scan_no_content));
@@ -158,8 +276,12 @@ public class HomeActivity extends PCBaseActivity {
                 if (data == null) return;
                 Bundle bundle = data.getExtras();
                 String scanResult = bundle.getString(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN);
-                //将扫描出的信息显示出来
-                SimplexToast.show(HomeActivity.this, scanResult);
+                if (!TextUtils.isEmpty(scanResult)){
+                    //将扫描出的信息显示出来
+                    SimplexToast.show(HomeActivity.this, scanResult);
+                    showLoading();
+                    showTransferDialog(scanResult);
+                }
                 break;
         }
     }
@@ -169,15 +291,71 @@ public class HomeActivity extends PCBaseActivity {
      *
      * @param text
      */
-    private void showTransferDialog(String text) {
+    private void showTransferDialog(final String text) {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         if (query != null) {
             query.getInBackground(text,new GetCallback<ParseUser>() {
                 @Override
-                public void done(ParseUser object, ParseException e) {
+                public void done(final ParseUser object, ParseException e) {
+                    dismissLoading();
                     if (object != null) {
                         try{
-                            SimplexToast.show(HomeActivity.this, object.getString("firstName"));
+                            PCDialogManger.showEditableDialog(mContext,
+                                    mContext.getResources().getString(R.string.Transfer_to)
+                                            +":"+ object.getString("firstName"),
+                                    mContext.getResources().
+                                            getString(R.string.Input_amount), InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL
+                                    ,null,
+                                    new QMUIDialogAction.ActionListener() {
+
+
+                                @Override
+                                public void onClick(QMUIDialog qmuiDialog, int i) {
+
+                                    qmuiDialog.dismiss();
+                                }
+                            }, mContext.getResources().getString(R.string.Transfer),
+                                    new IPositiveClickListener() {
+                                @Override
+                                public void onPositiveClick(final String msg, final QMUIDialog dialog) {
+                                    if (!isAdmin){
+                                        if (TextUtils.isEmpty(msg)){
+                                            SimplexToast.show(mContext,mContext.getResources().
+                                                    getString(R.string.Input_amount));
+                                            return;
+                                        }
+
+                                        if (Double.valueOf(msg) > Double.valueOf(mAccountSum.getText().toString())){
+                                            SimplexToast.show(mContext,mContext.getResources().
+                                                    getString(R.string.Balance_insufficient));
+                                            return;
+                                        }
+                                    }
+
+                                    Transaction transaction = new Transaction();
+                                    transaction.put("from",ParseUser.getCurrentUser());
+                                    transaction.put("to",object);
+                                  List<String> list =  Arrays.asList(new String[]{ParseUser.getCurrentUser().getObjectId(),
+                                            text});
+                                    transaction.put("users",list);
+                                    transaction.put("amount",Double.valueOf(msg));
+                                    transaction.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null){
+                                                String tips = mContext.getResources().getString(R.string.Succeeded)
+                                                        +","+mContext.getResources().getString(R.string.You_transfered)
+                                                        +Double.valueOf(msg);
+                                                SimplexToast.show(mContext,tips);
+                                                dialog.dismiss();
+                                            }else{
+                                                SimplexToast.show(mContext,e.getMessage());
+                                            }
+                                        }
+                                    });
+
+                                }
+                            });
                         }catch (ClassCastException e1){
                             SimplexToast.show(HomeActivity.this, "查询错误::类型转换错误:"+e1.getMessage());
                         }

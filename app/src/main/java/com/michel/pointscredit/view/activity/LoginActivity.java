@@ -89,7 +89,7 @@ public class LoginActivity extends PCBaseActivity {
         mProgressDialog =
                 new QMUITipDialog.Builder(this)
                         .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
-                        .setTipWord("登录中，请稍候……")
+                        .setTipWord(mContext.getResources().getString(R.string.loading))
                         .create();
 
         Intent intent = getIntent();

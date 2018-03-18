@@ -3,6 +3,7 @@ package com.michel.pointscredit.view.widget;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -44,15 +45,25 @@ public class PCDialogManger {
     public static void showEditableDialog(@NonNull final Context context, String title, String hint,
                                           QMUIDialogAction.ActionListener cancelListener,
                                           final IPositiveClickListener clickListener) {
+       showEditableDialog(context, title, hint,InputType.TYPE_CLASS_TEXT,null,
+               cancelListener, null,clickListener);
+    }
+
+    public static void showEditableDialog(@NonNull final Context context, String title, String hint,
+                                          int inputType,
+                                          String cancelMsg,
+                                          QMUIDialogAction.ActionListener cancelListener,
+                                          String positiveMsg,
+                                          final IPositiveClickListener clickListener) {
         final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(context);
         builder.setTitle(title)
                 .setPlaceholder(hint)
-                .setInputType(InputType.TYPE_CLASS_TEXT);
+                .setInputType(inputType);
         if (cancelListener != null) {
-            builder.addAction("取消", cancelListener);
+            builder.addAction(TextUtils.isEmpty(cancelMsg)?context.getResources().getString(R.string.Cancel):cancelMsg, cancelListener);
         }
         if (clickListener != null) {
-            builder.addAction("确定", new QMUIDialogAction.ActionListener() {
+            builder.addAction(TextUtils.isEmpty(positiveMsg)?context.getResources().getString(R.string.Confirm):positiveMsg, new QMUIDialogAction.ActionListener() {
                 @Override
                 public void onClick(QMUIDialog qmuiDialog, int i) {
                     String msg = builder.getEditText().getText() == null ? "" : builder.getEditText().getText().toString();

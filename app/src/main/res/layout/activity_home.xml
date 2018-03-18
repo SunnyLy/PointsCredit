@@ -125,7 +125,7 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/tv_account_sum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView6"
@@ -134,7 +134,7 @@
             android:layout_marginLeft="19dp"
             android:layout_marginStart="19dp"
             android:layout_marginTop="16dp"
-            android:text="50"
+            android:text="0.0"
             android:textAlignment="center"
             android:textColor="@color/color_666666"
             android:textSize="20sp"
@@ -144,9 +144,10 @@
         <TextView
             android:id="@+id/tv_transactions"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="43dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:gravity="center"
             android:layout_centerVertical="true"
             android:layout_marginEnd="29dp"
             android:layout_marginRight="29dp"

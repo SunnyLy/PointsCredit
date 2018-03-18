@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/widget_transaction_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/widget_transaction_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_toLeftOf="@+id/widget_transaction_amount"
+        android:layout_alignParentLeft="true"
+        android:gravity="top"
+        android:textColor="@color/color_666666"
+        android:textSize="18sp"
+        android:layout_marginBottom="3dp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/widget_transaction_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_toLeftOf="@+id/widget_transaction_amount"
+        android:layout_below="@+id/widget_transaction_name"
+        android:layout_alignParentLeft="true"
+        android:gravity="top"
+        android:textSize="13sp"
+        android:textColor="@color/color_999999"
+        />
+</RelativeLayout>
