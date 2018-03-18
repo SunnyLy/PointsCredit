@@ -146,7 +146,7 @@ public class LoginActivity extends PCBaseActivity {
                     Log.e("pc", e.getMessage());
                     SimplexToast.show(LoginActivity.this, e.getMessage());
                 } else {
-                    SimplexToast.show(LoginActivity.this, getResources().getString(R.string.Succeeded));
+                    SimplexToast.show(LoginActivity.this, getResources().getString(R.string.login_succeeded));
                     Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(homeIntent);
                     finish();

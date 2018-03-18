@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,31 +10,9 @@
         android:layout_height="wrap_content"
         android:clipToPadding="true"
         android:fitsSystemWindows="true"
+        android:layout_alignParentTop="true"
         app:title_content="@string/Connect" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="42dp"
-        android:layout_height="20dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/et_login_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_user" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="42dp"
-        android:layout_height="20dp"
-        android:layout_marginBottom="12dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/et_login_pwd"
-        app:layout_constraintEnd_toStartOf="@+id/et_login_pwd"
-        app:layout_constraintHorizontal_bias="0.603"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/login_ic_lock" />
 
     <com.michel.pointscredit.view.widget.PCEditText
         android:id="@+id/et_login_pwd"
@@ -49,12 +27,9 @@
         android:textSize="13sp"
         app:et_hint="@string/Password"
         app:et_icon_src="@drawable/iclock"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.419"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/et_login_email"
-        app:layout_constraintVertical_bias="0.08" />
+        android:layout_below="@+id/et_login_email"
+        android:layout_centerHorizontal="true"
+         />
 
     <com.michel.pointscredit.view.widget.PCEditText
         android:id="@+id/et_login_email"
@@ -69,10 +44,9 @@
         android:textSize="13sp"
         app:et_hint="@string/Email"
         app:et_icon_src="@drawable/ic_user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.393"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+        android:layout_below="@+id/login_icon"
+        android:layout_centerHorizontal="true"
+         />
 
     <Button
         android:id="@+id/btn_login_reg"
@@ -87,12 +61,8 @@
         android:text="@string/Sign_up"
         android:textColor="@color/color_6492FF"
         android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.802"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.82" />
+        android:visibility="invisible"
+        android:layout_below="@+id/et_login_pwd" />
 
     <Button
         android:id="@+id/btn_login"
@@ -108,12 +78,9 @@
         android:text="@string/Connect"
         android:textColor="@color/color_D1DCFD"
         android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.823" />
+        android:layout_below="@+id/et_login_pwd"
+        android:layout_centerInParent="true"
+        />
 
     <TextView
         android:id="@+id/tv_login_forget"
@@ -123,28 +90,19 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="34dp"
-        android:text="Forget Password?"
+        android:text="@string/forget_password"
         android:textAlignment="center"
         android:textColor="@color/color_6492FF"
         android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_below="@+id/btn_login"
+        android:layout_centerInParent="true"/>
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/login_icon"
         android:layout_width="160dp"
         android:layout_height="116dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.102"
-        app:srcCompat="@drawable/pc_logo" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_below="@+id/login_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/pc_logo" />
+</RelativeLayout>

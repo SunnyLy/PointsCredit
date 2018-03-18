@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Do_you_still_go_to_ATM">70万法国人已开始使用PointsCredit. 你还在使用自动柜员机吗?</string>
+    <string name="Do_you_still_go_to_ATM">使用iSCAN积分, 从iSCAN授权的商家购买或租赁商品</string>
     <string name="I_have_an_account">已有账号,马上登录</string>
     <string name="I_am_a_new_user">没有账号,立即注册</string>
     <string name="Connect">登录</string>
@@ -19,7 +19,7 @@
     <string name="InputPhone">请输入您的电话号码</string>
     <string name="InputFirstName">请输入您的名字</string>
     <string name="InputLastName">请输入您的姓氏</string>
-    <string name="ReadAndAcceptTerms">请阅读并接受使用条款</string>
+    <string name="ReadAndAcceptTerms">我已阅读并同意相关服务条款</string>
     <string name="InvalidEmail">注意:非法邮箱地址</string>
     <string name="EmailExists">邮箱地址已使用</string>
     <string name="Balance">账户余额</string>
@@ -35,5 +35,9 @@
     <string name="Succeeded">成功</string>
     <string name="You_transfered">你刚刚转出:</string>
     <string name="CheckMailbox">请查看您的邮箱</string>
+    <string name="facebook_login">脸谱账号登录</string>
+    <string name="google_login">谷歌账号登录</string>
+    <string name="or">或</string>
+    <string name="login_succeeded">登录成功</string>
 
 </resources>

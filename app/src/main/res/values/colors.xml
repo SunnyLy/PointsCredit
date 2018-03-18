@@ -24,5 +24,7 @@
     <color name="color_527FFF">#527fff</color>
     <color name="color_4D415FB6">#4D415FB6</color>
     <color name="color_FFEEEEEE">#FFEEEEEE</color>
+    <color name="color_5E7AB4">#5E7AB4</color>
+    <color name="color_DD4A38">#DD4A38</color>
     <color name="qmui_config_color_link">@color/colorPrimary</color>
 </resources>

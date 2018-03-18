@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
+    android:background="#FFF8F8F8"
     tools:context="com.michel.pointscredit.view.activity.WelcomeActivity">
 
     <TextView
@@ -12,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
-        android:layout_marginLeft="65dp"
-        android:layout_marginRight="65dp"
-        android:lineSpacingExtra="8sp"
+        android:layout_marginLeft="33dp"
+        android:layout_marginRight="33dp"
         android:text="@string/Do_you_still_go_to_ATM"
         android:textAlignment="center"
         android:textColor="@color/color_999999"
@@ -22,8 +22,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="299dp"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
         android:scaleType="fitXY"
         android:src="@drawable/main_header" />
 
@@ -32,8 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView2"
-        android:layout_marginBottom="18dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="28dp"
         android:text="Points Credit"
         android:textAlignment="center"
         android:textColor="@color/color_6492FF"
@@ -44,21 +44,60 @@
         android:id="@+id/btn_accounted"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:layout_above="@+id/btn_newUser"
+        android:layout_below="@+id/tv_info"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="17dp"
         android:layout_marginLeft="47dp"
         android:layout_marginRight="47dp"
         android:background="@drawable/round_rectangle_blue"
         android:text="@string/I_have_an_account"
         android:textAllCaps="false"
         android:textColor="@android:color/white" />
+    
+    <TextView
+        android:id="@+id/view_facebook"
+        android:layout_width="140dp"
+        android:layout_height="26dp"
+        android:drawableLeft="@drawable/facebook_icon"
+        android:background="@color/color_5E7AB4"
+        android:layout_below="@+id/btn_accounted"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:textColor="@android:color/white"
+        android:text="@string/facebook_login"/>
+
+    <TextView
+        android:id="@+id/view_google"
+        android:layout_width="140dp"
+        android:layout_height="26dp"
+        android:drawableLeft="@drawable/google_icon"
+        android:background="@color/color_DD4A38"
+        android:layout_below="@+id/view_facebook"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:textColor="@android:color/white"
+        android:text="@string/google_login"/>
+
+    <TextView
+        android:id="@+id/view_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_999999"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:textSize="17sp"
+        android:layout_below="@+id/view_google"
+        android:layout_centerHorizontal="true"
+        android:text="@string/or"/>
 
     <Button
         android:id="@+id/btn_newUser"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_below="@+id/view_or"
         android:layout_marginLeft="47dp"
         android:layout_marginRight="47dp"
         android:background="@drawable/round_rectangle_stroke_4d415fb6"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Do_you_still_go_to_ATM">700 000 français utilisent déja Points Credit. Vous allez encore au distributeur ?</string>
+    <string name="Do_you_still_go_to_ATM">Utilisez les points iSCAN, pour acheter ou louer chez les commerçans agrées iSCAN</string>
     <string name="I_have_an_account">J\'ai déja un compte</string>
     <string name="I_am_a_new_user">Je suis nouveau</string>
     <string name="Connect">Se connecter</string>

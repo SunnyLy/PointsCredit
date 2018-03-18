@@ -3,6 +3,7 @@ package com.michel.pointscredit.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -63,7 +64,7 @@ public abstract class PCBaseActivity extends AppCompatActivity implements View.O
     }
 
     public void dismissLoading(){
-        if (mLoading != null && mLoading.isShowing()){
+        if (mLoading != null && mLoading.isShowing() && !isFinishing()){
             mLoading.dismiss();
             mLoading = null;
         }
@@ -94,6 +95,10 @@ public abstract class PCBaseActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view) {
 
+    }
+
+    public String getResString(@StringRes int resId){
+        return mContext.getResources().getString(resId);
     }
 
 }

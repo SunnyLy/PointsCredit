@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.michel.pointscredit.view.widget.PCCommonTitleLayout
+    android:id="@+id/reg_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+    app:title_content="@string/Sign_up"/>
+    
+    <ImageView
+        android:id="@+id/reg_user_icon"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/bg_user"
+        android:layout_marginTop="41dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/reg_title"/>
+
+    <com.michel.pointscredit.view.widget.PCRegEditText
+        android:id="@+id/et_reg_email"
+        android:layout_width="272dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/reg_user_icon"
+        app:et_hint="@string/Email"
+        app:et_icon_src="@drawable/ic_letter"
+         />
+
+
+    <com.michel.pointscredit.view.widget.PCRegEditText
+        android:id="@+id/et_reg_pwd"
+        android:layout_width="272dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        android:layout_below="@+id/et_reg_email"
+        app:et_hint="@string/Password"
+        app:et_icon_src="@drawable/login_ic_lock"
+        android:layout_centerInParent="true"/>
+
+    <com.michel.pointscredit.view.widget.PCRegEditText
+        android:id="@+id/et_reg_phone"
+        android:layout_width="272dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        app:et_hint="@string/InputPhone"
+        android:inputType="phone"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        android:layout_below="@+id/et_reg_pwd"
+        android:layout_centerHorizontal="true"/>
+
+
+    <com.michel.pointscredit.view.widget.PCRegEditText
+        android:id="@+id/et_reg_firstname"
+        android:layout_width="272dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        app:et_hint="@string/First_name"
+        android:inputType="textPersonName"
+        android:textColor="@color/color_666666"
+        android:textSize="13sp"
+        android:layout_below="@+id/et_reg_phone"
+        android:layout_centerHorizontal="true"/>
+
+    <com.michel.pointscredit.view.widget.PCRegEditText
+        android:id="@+id/et_reg_lastname"
+        android:layout_width="272dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        app:et_hint="@string/Last_name"
+        android:inputType="textPersonName"
+        android:textColor="@color/color_666666"
+        android:textSize="13sp"
+        android:layout_below="@+id/et_reg_firstname"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btn_reg"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="38dp"
+        android:background="@drawable/round_rectangle_blue_stroke"
+        android:text="@string/Sign_up_now"
+        android:textColor="@color/color_527FFF"
+        android:layout_marginBottom="30dp"
+        android:textSize="13sp"
+        android:layout_below="@+id/et_reg_lastname"
+        android:layout_centerHorizontal="true"/>
+
+    <CheckBox
+        android:id="@+id/cb_reg_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="@string/ReadAndAcceptTerms"
+        android:textColor="@color/color_6492FF"
+        android:textSize="13sp"
+        android:buttonTint="@color/color_6492FF"
+        android:layout_below="@+id/btn_reg"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
