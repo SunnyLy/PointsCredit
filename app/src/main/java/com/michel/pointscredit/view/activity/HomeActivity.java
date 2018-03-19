@@ -108,24 +108,6 @@ public class HomeActivity extends PCBaseActivity {
 
     }
 
-    @Override
-    public void showLoading() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(mContext);
-        }
-        if (!mProgressDialog.isShowing())
-            mProgressDialog.show();
-    }
-
-    @Override
-    public void dismissLoading() {
-
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
-        }
-    }
-
     private void getTranstactions() {
         final ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Transaction.TAG);
         parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
