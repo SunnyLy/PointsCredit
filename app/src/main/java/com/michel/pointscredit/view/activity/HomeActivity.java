@@ -51,6 +51,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.BindView;
 
 /**
@@ -99,47 +101,44 @@ public class HomeActivity extends PCBaseActivity {
 
 
         showLoading();
-        new Thread() {
-            @Override
-            public void run() {
-                getTranstactions();
-            }
-        }.start();
-
+        getTransactions2();
     }
 
-    private void getTranstactions() {
+    private void getTransactions2() {
         final ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Transaction.TAG);
         parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
         parseQuery.setLimit(1000);//最多拉取1000条数据
         parseQuery.orderByDescending("updatedAt");
-        parseQuery.findInBackground(new FindCallback<ParseObject>() {
+        parseQuery.findInBackground().onSuccess(new Continuation<List<ParseObject>, Object>() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (objects != null && objects.size() > 0) {
-                    mTransactions.clear();
-                    double sum = 0;
-                    for (ParseObject transaction : objects) {
-                        double amount = transaction.getDouble("amount");
-                        Log.e("pc", "amount:" + amount);
-                        sum += amount;
-                        TrascationItemBean itemBean = transferPO2Bean(transaction);
-                        if (itemBean != null)
-                            mTransactions.add(itemBean);
-                    }
-                    final double sumAmount = sum;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            dismissLoading();
-                            freshUI(sumAmount);
+            public Object then(Task<List<ParseObject>> task) throws Exception {
+                if (task != null) {
+                    List<ParseObject> objects = task.getResult();
+                    if (objects != null && objects.size() > 0) {
+                        mTransactions.clear();
+                        double sum = 0;
+                        for (ParseObject transaction : objects) {
+                            double amount = transaction.getDouble("amount");
+                            Log.e("pc", "amount:" + amount);
+                            sum += amount;
+                            TrascationItemBean itemBean = transferPO2Bean(transaction);
+                            if (itemBean != null)
+                                mTransactions.add(itemBean);
                         }
-                    });
+                        final double sumAmount = sum;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dismissLoading();
+                                freshUI(sumAmount);
+                            }
+                        });
 
-                } else {
-                    dismissLoading();
+                    } else {
+                        dismissLoading();
+                    }
                 }
-                Log.e("pc:home", e == null ? "e==null" : e.getMessage());
+                return null;
             }
         });
     }
