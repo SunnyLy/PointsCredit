@@ -60,6 +60,7 @@
         android:textColor="@color/color_999999"
         android:textSize="13sp"
         android:layout_below="@+id/et_reg_pwd"
+        app:et_icon_src="@drawable/ic_phone"
         android:layout_centerHorizontal="true"/>
 
 

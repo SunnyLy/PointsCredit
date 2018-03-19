@@ -42,7 +42,7 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
 
     public static final String USER_ID = "userId";
     private static final String DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "iScan";
-    private static final String FILE_NAME = "my_qrcode";
+    private static final String FILE_NAME = "qrcode.png";
     private static final int WRITE_EXTERNAL = 0x1;
     private static final int READ_EXTERNAL = 0x2;
     @BindView(R.id.iv_my_qrcode)
@@ -78,7 +78,7 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
             }
         }
         saveBmTask();
-        uri = saveBitmap();
+//        uri = saveBitmap();
     }
 
     @AfterPermissionGranted(WRITE_EXTERNAL)
@@ -127,7 +127,7 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
 
         File file = new File(DIR);
         if (!file.exists()) file.mkdirs();
-        file = new File(file.getAbsoluteFile(), "qrcode.png");
+        file = new File(file.getAbsoluteFile(), FILE_NAME);
 //        if (file.exists()) file.delete();
 
         FileOutputStream out = null;
@@ -150,14 +150,23 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
      * @param uri
      */
     private void startShare(Uri uri) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setType("image/jpg");
-        intent.setType("text/*");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.ErCode));
-        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.ErCode));
-        startActivity(Intent.createChooser(intent, getResources().getString(R.string.app_name)));
+//        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setType("image/*");
+//        intent.putExtra(Intent.EXTRA_STREAM, uri);
+//        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.ErCode));
+//        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.ErCode));
+//        startActivity(Intent.createChooser(intent, getResources().getString(R.string.app_name)));
+
+        String imagePath = DIR + File.separator + FILE_NAME;
+        //由文件得到uri
+        Uri imageUri = Uri.fromFile(new File(imagePath));
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        shareIntent.setType("image/*");
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_qrcode)));
 
     }
 

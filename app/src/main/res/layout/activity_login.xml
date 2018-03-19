@@ -26,7 +26,7 @@
         android:textColor="@color/color_6492FF"
         android:textSize="13sp"
         app:et_hint="@string/Password"
-        app:et_icon_src="@drawable/iclock"
+        app:et_icon_src="@drawable/login_ic_lock"
         android:layout_below="@+id/et_login_email"
         android:layout_centerHorizontal="true"
          />

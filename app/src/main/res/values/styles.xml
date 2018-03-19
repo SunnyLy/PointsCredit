@@ -27,4 +27,9 @@
         <item name="android:paddingRight">20dp</item>
     </style>
 
+    <!--闪屏主题-->
+    <style name="PC.Splash.Theme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_bg</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

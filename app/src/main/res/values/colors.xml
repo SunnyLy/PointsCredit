@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/color_6581F0</color>
-    <color name="colorPrimaryDark">@color/color_6581F0</color>
-    <color name="colorAccent">@color/color_6581F0</color>
+    <color name="colorPrimary">@color/color_009BFA</color>
+    <color name="colorPrimaryDark">@color/color_009BFA</color>
+    <color name="colorAccent">@color/color_009BFA</color>
 
     <color name="white40">#40FFFFFF</color>
-    <color name="color_6581F0">#FF6581F0</color>
+    <!--<color name="color_6581F0">#FF6581F0</color>-->
+    <color name="color_6581F0">@color/color_009BFA</color>
+    <color name="color_009BFA">#FF009BFA</color>
     <color name="black_alpha_240">#f0000000</color>
 
     <color name="pc_ripple_color">?android:attr/selectableItemBackground</color>
