@@ -108,17 +108,33 @@ public class HomeActivity extends PCBaseActivity {
 
     }
 
+    @Override
+    public void showLoading() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(mContext);
+        }
+        if (!mProgressDialog.isShowing())
+            mProgressDialog.show();
+    }
+
+    @Override
+    public void dismissLoading() {
+
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
+
     private void getTranstactions() {
         final ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Transaction.TAG);
-        showLoading();
-//        parseQuery.whereContains("users", "4LoVmT5twu");
         parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
         parseQuery.setLimit(1000);//最多拉取1000条数据
+        parseQuery.orderByDescending("updatedAt");
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (objects != null && objects.size() > 0) {
-                    Log.e("pc:home", "transactions:" + objects.size());
                     mTransactions.clear();
                     double sum = 0;
                     for (ParseObject transaction : objects) {
@@ -129,7 +145,6 @@ public class HomeActivity extends PCBaseActivity {
                         if (itemBean != null)
                             mTransactions.add(itemBean);
                     }
-
                     final double sumAmount = sum;
                     runOnUiThread(new Runnable() {
                         @Override
@@ -178,7 +193,7 @@ public class HomeActivity extends PCBaseActivity {
             itemBean.setUserName(userName);
             itemBean.setOut(isOut);
             Double dbMoney = object.getDouble("amount");
-            DecimalFormat df = new DecimalFormat("#.000");
+            DecimalFormat df = new DecimalFormat("0.00");
             String money = "€" + df.format(dbMoney);
             itemBean.setSum(money);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -194,8 +209,7 @@ public class HomeActivity extends PCBaseActivity {
      * @param sum
      */
     private void freshUI(double sum) {
-
-        mAccountSum.setText(new DecimalFormat("#.000").format(sum >= 0 ? sum : 0.0));
+        mAccountSum.setText(new DecimalFormat("0.00").format(sum >= 0 ? sum : 0.0));
     }
 
     @Override
@@ -233,12 +247,6 @@ public class HomeActivity extends PCBaseActivity {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media
                 .EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, IMAGE_REQUEST_CODE);
-    }
-
-    private void test() {
-        Bundle params = new Bundle();
-        params.putString(MyQrcodeActivity.USER_ID, "EHWkHpMtD7");
-        RouterUtils.jump2TargetWithBundle(this, MyQrcodeActivity.class, params);
     }
 
     @Override
@@ -352,10 +360,10 @@ public class HomeActivity extends PCBaseActivity {
                                         }
                                     });
                         } catch (ClassCastException e1) {
-                            SimplexToast.show(HomeActivity.this, "查询错误::类型转换错误:" + e1.getMessage());
+                            SimplexToast.show(mContext, mContext.getResources().getString(R.string.query_error));
                         }
                     } else {
-                        SimplexToast.show(mContext, "查询错误");
+                        SimplexToast.show(mContext, mContext.getResources().getString(R.string.query_error));
                     }
                 }
             });

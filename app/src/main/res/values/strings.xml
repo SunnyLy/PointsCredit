@@ -56,4 +56,5 @@
     <string name="or">或</string>
     <string name="login_succeeded">登录成功</string>
     <string name="share_qrcode">分享到</string>
+    <string name="query_error">查询错误</string>
 </resources>
