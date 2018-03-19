@@ -38,10 +38,12 @@ import pub.devrel.easypermissions.EasyPermissions;
  * 我的二维码界面
  */
 
-public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.PermissionCallbacks {
+public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions
+        .PermissionCallbacks {
 
     public static final String USER_ID = "userId";
-    private static final String DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "iScan";
+    private static final String DIR = Environment.getExternalStorageDirectory().getAbsolutePath()
+            + File.separator + "iScan";
     private static final String FILE_NAME = "qrcode.png";
     private static final int WRITE_EXTERNAL = 0x1;
     private static final int READ_EXTERNAL = 0x2;
@@ -78,19 +80,17 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
             }
         }
         saveBmTask();
-//        uri = saveBitmap();
     }
 
     @AfterPermissionGranted(WRITE_EXTERNAL)
     private void saveBmTask() {
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
-            uri = saveBitmap();
+            saveBitmap();
         } else {
             // Request one permission
-            EasyPermissions.requestPermissions(this,
-                    getResources().getString(R.string.str_request_sd_message),
-                    WRITE_EXTERNAL, perms);
+            EasyPermissions.requestPermissions(this, getResources().getString(R.string
+                    .str_request_sd_message), WRITE_EXTERNAL, perms);
         }
     }
 
@@ -107,8 +107,14 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
                     return;
                 }
 
-                if (uri != null)
-                    startShare(uri);
+                if (EasyPermissions.hasPermissions(mContext, Manifest.permission
+                        .READ_EXTERNAL_STORAGE)) {
+                    startShare();
+                } else {
+                    EasyPermissions.requestPermissions(this, getResources().getString(R.string
+                            .str_request_sd_message), WRITE_EXTERNAL, Manifest.permission
+                            .READ_EXTERNAL_STORAGE);
+                }
                 break;
         }
     }
@@ -118,8 +124,8 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
      *
      * @return
      */
-    private Uri saveBitmap() {
-        if (bitmap == null) return null;
+    private void saveBitmap() {
+        if (bitmap == null) return;
         File appDir = new File(DIR);
         if (!appDir.exists()) {
             appDir.mkdir();
@@ -128,36 +134,25 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
         File file = new File(DIR);
         if (!file.exists()) file.mkdirs();
         file = new File(file.getAbsoluteFile(), FILE_NAME);
-//        if (file.exists()) file.delete();
 
-        FileOutputStream out = null;
         try {
             ImageUtils.saveImageToSD(MyQrcodeActivity.this, file.getAbsolutePath(), bitmap, 100);
-//            Uri uri = Uri.parse(file.getAbsolutePath());
-            Uri uri = FileProvider.getUriForFile(MyQrcodeActivity.this, "com.michel.pointscredit", file);
-            return uri;
+//            Uri uri = FileProvider.getUriForFile(MyQrcodeActivity.this, "com.michel
+// .pointscredit", file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     /**
      * 开始调用 系统的分享
      *
-     * @param uri
+     * @param
      */
-    private void startShare(Uri uri) {
-//        Intent intent = new Intent(Intent.ACTION_SEND);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.setType("image/*");
-//        intent.putExtra(Intent.EXTRA_STREAM, uri);
-//        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.ErCode));
-//        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.ErCode));
-//        startActivity(Intent.createChooser(intent, getResources().getString(R.string.app_name)));
-
+    @AfterPermissionGranted(READ_EXTERNAL)
+    private void startShare() {
         String imagePath = DIR + File.separator + FILE_NAME;
         //由文件得到uri
         Uri imageUri = Uri.fromFile(new File(imagePath));
@@ -173,7 +168,7 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         if (perms != null && perms.size() > 0) {
-            uri = saveBitmap();
+            saveBitmap();
         } else {
             displayFrameworkBugMessageAndExit();
         }
@@ -189,7 +184,8 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions.
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }

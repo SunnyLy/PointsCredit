@@ -55,6 +55,6 @@
     <string name="google_login">谷歌账号登录</string>
     <string name="or">或</string>
     <string name="login_succeeded">登录成功</string>
-    <string name="share_qrcode">分享到</string>
+    <string name="share_qrcode">分享二维码到</string>
     <string name="query_error">查询错误</string>
 </resources>
