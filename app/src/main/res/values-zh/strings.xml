@@ -40,5 +40,7 @@
     <string name="or">或</string>
     <string name="login_succeeded">登录成功</string>
     <string name="share_qrcode">分享二维码到</string>
+    <string name="scan_qrcode">扫描二维码</string>
+    <string name="forget_password">忘记密码</string>
 
 </resources>

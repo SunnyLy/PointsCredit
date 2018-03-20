@@ -11,9 +11,9 @@
         android:id="@+id/widget_reg_et_ic"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:scaleType="fitCenter"
         android:layout_centerVertical="true"
         android:layout_marginBottom="2dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_user" />
 
     <EditText
@@ -22,10 +22,12 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="28dp"
         android:layout_toRightOf="@+id/widget_et_ic"
+        android:background="@null"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:background="@null"
+        android:imeOptions="actionDone"
         android:hint="@string/Email"
+        android:maxLines="1"
         android:textColor="@color/color_999999"
         android:textSize="13sp" />
 
@@ -33,8 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        />
+        android:background="@color/colorPrimary" />
 
 
 </RelativeLayout>

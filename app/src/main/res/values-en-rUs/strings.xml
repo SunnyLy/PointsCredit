@@ -19,7 +19,7 @@
     <string name="InputPhone">Please input your phone number</string>
     <string name="InputFirstName">Please input your first name</string>
     <string name="InputLastName">Please input your last name</string>
-    <string name="ReadAndAcceptTerms">Please read and accept our terms</string>
+    <string name="ReadAndAcceptTerms">I have read and accept the terms of use, the privacy policy, and the rules of fair use</string>
     <string name="InvalidEmail">Attention : This e-mail address is invalid</string>
     <string name="EmailExists">An account exists with this e-mail address</string>
     <string name="Balance">Balance</string>
@@ -35,5 +35,7 @@
     <string name="Succeeded">Succeeded</string>
     <string name="You_transfered">You transfered:</string>
     <string name="CheckMailbox">Please check your mailbox</string>
+    <string name="scan_qrcode">Scan the QR code</string>
+    <string name="forget_password">forget password ?</string>
 
 </resources>

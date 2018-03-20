@@ -18,13 +18,14 @@
     <EditText
         android:id="@+id/widget_et_content"
         android:layout_width="match_parent"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
         android:layout_height="match_parent"
         android:layout_marginLeft="28dp"
         android:layout_toRightOf="@+id/widget_et_ic"
         android:background="@null"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/Email"
+        android:maxLines="1"
         android:textColor="@color/color_999999"
         android:textSize="13sp" />
 

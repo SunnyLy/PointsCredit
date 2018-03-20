@@ -97,9 +97,6 @@ public class HomeActivity extends PCBaseActivity {
         }
         if (ParseUser.getCurrentUser() == null) return;
         isAdmin = ParseUser.getCurrentUser().getBoolean("isAdmin");
-        //objectId:EHWkHpMtD7
-
-
         showLoading();
         getTransactions2();
     }
@@ -284,9 +281,10 @@ public class HomeActivity extends PCBaseActivity {
                     dismissLoading();
                     if (object != null) {
                         try {
+                            final String userName = object.getString("firstName");
                             PCDialogManger.showEditableDialog(mContext,
                                     mContext.getResources().getString(R.string.Transfer_to)
-                                            + ":" + object.getString("firstName"),
+                                            + ":" + userName,
                                     mContext.getResources().
                                             getString(R.string.Input_amount), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL
                                     , null,
@@ -331,6 +329,21 @@ public class HomeActivity extends PCBaseActivity {
                                                                 + "," + mContext.getResources().getString(R.string.You_transfered)
                                                                 + Double.valueOf(msg);
                                                         SimplexToast.show(mContext, tips);
+                                                        TrascationItemBean itemBean = new TrascationItemBean();
+                                                        itemBean.setOut(true);
+                                                        itemBean.setSum(msg);
+                                                        itemBean.setUserName(userName);
+                                                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                                                        itemBean.setUpdateTime(format.format(new Date()));
+                                                        mTransactions.add(0, itemBean);
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                //转账成功，刷新界面
+                                                                freshUI(Double.parseDouble(msg)
+                                                                        + Double.parseDouble(mAccountSum.getText().toString()));
+                                                            }
+                                                        });
                                                         dialog.dismiss();
                                                     } else {
                                                         SimplexToast.show(mContext, e.getMessage());

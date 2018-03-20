@@ -50,11 +50,12 @@
     <string name="reg_ing">注册中，请稍候……</string>
     <string name="reg_success">注册成功</string>
     <string name="not_transfer_to_self">不能自己给自己转账</string>
-    <string name="agree_please">我已阅读并同意相关服务条款</string>
     <string name="facebook_login">脸谱账号登录</string>
     <string name="google_login">谷歌账号登录</string>
     <string name="or">或</string>
     <string name="login_succeeded">登录成功</string>
     <string name="share_qrcode">分享二维码到</string>
     <string name="query_error">查询错误</string>
+    <string name="scan_qrcode">扫描二维码</string>
+    <string name="my_qrcode">我的二维码</string>
 </resources>

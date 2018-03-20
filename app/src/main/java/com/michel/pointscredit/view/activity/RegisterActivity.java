@@ -1,6 +1,5 @@
 package com.michel.pointscredit.view.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
@@ -59,7 +57,7 @@ public class RegisterActivity extends PCBaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_reg2;
+        return R.layout.activity_reg;
     }
 
     @Override
@@ -72,7 +70,9 @@ public class RegisterActivity extends PCBaseActivity {
         mEtPhone = mPhoneLayout.getEdiText();
         mEtPhone.setInputType(InputType.TYPE_CLASS_PHONE);
         mEtFirstName = mFirstNameLayout.getEdiText();
+        mEtFirstName.setInputType(InputType.TYPE_CLASS_TEXT);
         mEtLastName = mLastNameLayout.getEdiText();
+        mEtLastName.setInputType(InputType.TYPE_CLASS_TEXT);
         setViewsOnClickListener(mCBAgree, mBtnReg, mTitleBar.getLeftBackView());
         mUser = new User();
     }
@@ -99,7 +99,7 @@ public class RegisterActivity extends PCBaseActivity {
                 }
 
                 if (!isAgree){
-                    SimplexToast.show(mContext,getResString(R.string.agree_please));
+                    SimplexToast.show(mContext,getResString(R.string.ReadAndAcceptTerms));
                     return;
                 }
                 showLoading();

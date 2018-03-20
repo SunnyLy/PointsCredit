@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -154,10 +155,23 @@ public class MyQrcodeActivity extends PCBaseActivity implements EasyPermissions
     @AfterPermissionGranted(READ_EXTERNAL)
     private void startShare() {
         String imagePath = DIR + File.separator + FILE_NAME;
+
         //由文件得到uri
-        Uri imageUri = Uri.fromFile(new File(imagePath));
+        File filePath = new File(imagePath);
+        Uri imageUri /*= Uri.fromFile(filePath)*/;
 
         Intent shareIntent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            imageUri = FileProvider.getUriForFile(mContext, "com.michel.pointscredit.fileprovider",
+                    filePath);
+            shareIntent.setDataAndType(imageUri, "application/vnd.android.package-archive");
+        } else {
+            imageUri = Uri.fromFile(filePath);
+            shareIntent.setDataAndType(imageUri, "application/vnd.android.package-archive");
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
         shareIntent.setType("image/*");

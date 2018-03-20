@@ -19,7 +19,7 @@
     <string name="InputPhone">frPlease input your phone number</string>
     <string name="InputFirstName">frPlease input your first name</string>
     <string name="InputLastName">frPlease input your last name</string>
-    <string name="ReadAndAcceptTerms">frPlease read and accept our terms</string>
+    <string name="ReadAndAcceptTerms">J\'ai lu et accepte les conditions d\'utilisations, la politique de confidentialité, et les régles d\'utilisation équitable</string>
     <string name="InvalidEmail">Attention : Cette adresse e-mail n\'est pas valide</string>
     <string name="EmailExists">frAn account exists with this e-mail address</string>
     <string name="Balance">Solde</string>
@@ -35,5 +35,6 @@
     <string name="Succeeded">Réussi</string>
     <string name="You_transfered">Vous avez fait un transfert:</string>
     <string name="CheckMailbox">Veuillez vérifier votre boîte aux lettres</string>
-
+    <string name="scan_qrcode">Scannez le QR code</string>
+    <string name="forget_password">Mot de passe oublié ?</string>
 </resources>
