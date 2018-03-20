@@ -97,6 +97,11 @@ public class HomeActivity extends PCBaseActivity {
         }
         if (ParseUser.getCurrentUser() == null) return;
         isAdmin = ParseUser.getCurrentUser().getBoolean("isAdmin");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         showLoading();
         getTransactions2();
     }
