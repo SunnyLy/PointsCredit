@@ -15,6 +15,23 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!--parse Push-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!--
+    GET_ACCOUNTS is only required for GCM on devices running Android lower than
+    4.0.4. You may leave out this permission if you are targetting 4.0.4+.
+    -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!--
+    IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
+    to match your app's package name + ".permission.C2D_MESSAGE".
+    -->
+    <permission android:protectionLevel="signature"
+        android:name="com.parse.starter.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.parse.starter.permission.C2D_MESSAGE" />
+
     <application
         android:name=".PCApplication"
         android:allowBackup="true"
@@ -58,11 +75,36 @@
                 android:resource="@xml/pointscredit_file_path" />
         </provider>
 
-        <!-- 必选-->
-        <!--<meta-data
-            android:name="PGYER_APPID"
-            android:value="4b6e8877dfcc2462bedb37dcf66b6d87" >
-        </meta-data>-->
+        <!--Parse 消息推送-->
+        <service android:name="com.parse.PushService" />
+        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <!--
+                IMPORTANT: Change "com.parse.starter" to match your app's package name.
+                -->
+                <category android:name="com.michel.pointscredit" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+        IMPORTANT: Change "YOUR_SENDER_ID" to your GCM Sender Id.
+        -->
+        <meta-data android:name="com.parse.push.gcm_sender_id"
+            android:value="id:YOUR_SENDER_ID" />;
+
+
     </application>
 
 </manifest>

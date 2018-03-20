@@ -1,10 +1,10 @@
 package com.michel.pointscredit.view.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,14 +13,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.michel.pointscredit.R;
 import com.michel.pointscredit.base.PCBaseActivity;
 import com.michel.pointscredit.bean.Transaction;
 import com.michel.pointscredit.bean.TrascationItemBean;
-import com.michel.pointscredit.bean.User;
 import com.michel.pointscredit.callback.IPositiveClickListener;
 import com.michel.pointscredit.google.zxing.activity.CaptureActivity;
 import com.michel.pointscredit.utils.QrCodeUtils;
@@ -28,10 +26,11 @@ import com.michel.pointscredit.utils.RouterUtils;
 import com.michel.pointscredit.view.widget.PCCommonTitleLayout;
 import com.michel.pointscredit.view.widget.PCDialogManger;
 import com.michel.pointscredit.view.widget.SimplexToast;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.ParsePushBroadcastReceiver;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -40,16 +39,13 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.ruffian.library.RTextView;
 
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -61,6 +57,9 @@ import butterknife.BindView;
 
 public class HomeActivity extends PCBaseActivity {
     private static final int IMAGE_REQUEST_CODE = 0x101;
+    //交易通道
+    private static final String CHANNEL = "Transactions";
+
     @BindView(R.id.tv_transactions)
     TextView mTransaction;
     @BindView(R.id.tv_account_sum)
@@ -91,22 +90,50 @@ public class HomeActivity extends PCBaseActivity {
         super.onCreate(savedInstanceState);
         setViewsOnClickListener(mTransaction, mBtnScan, mBtnQrcode, mBtnTransfer, mTitleBar
                 .getLeftBackView());
+        //注册消息推送
+        ParsePush.subscribeInBackground(CHANNEL, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+            }
+        });
 
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(mContext);
         }
         if (ParseUser.getCurrentUser() == null) return;
         isAdmin = ParseUser.getCurrentUser().getBoolean("isAdmin");
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.parse.push.intent.RECEIVE");
+        intentFilter.addAction("com.parse.push.intent.DELETE");
+        intentFilter.addAction("com.parse.push.intent.OPEN");
+        registerReceiver(pushBroadcastReceiver, intentFilter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        showLoading();
-        getTransactions2();
+        getTransactions();
     }
 
-    private void getTransactions2() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //注销指定通道
+        ParsePush.unsubscribeInBackground(CHANNEL, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+            }
+        });
+
+        //注销广播
+        unregisterReceiver(pushBroadcastReceiver);
+    }
+
+    private void getTransactions() {
+        showLoading();
         final ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(Transaction.TAG);
         parseQuery.whereContains("users", ParseUser.getCurrentUser().getObjectId());
         parseQuery.setLimit(1000);//最多拉取1000条数据
@@ -124,8 +151,7 @@ public class HomeActivity extends PCBaseActivity {
                             Log.e("pc", "amount:" + amount);
                             sum += amount;
                             TrascationItemBean itemBean = transferPO2Bean(transaction);
-                            if (itemBean != null)
-                                mTransactions.add(itemBean);
+                            if (itemBean != null) mTransactions.add(itemBean);
                         }
                         final double sumAmount = sum;
                         runOnUiThread(new Runnable() {
@@ -244,7 +270,8 @@ public class HomeActivity extends PCBaseActivity {
                         Result result = QrCodeUtils.scanningImage(path);
                         if (result != null && !TextUtils.isEmpty(result.getText())) {
                             if (result.getText().equals(ParseUser.getCurrentUser().getObjectId())) {
-                                SimplexToast.show(mContext, mContext.getResources().getString(R.string.not_transfer_to_self));
+                                SimplexToast.show(mContext, mContext.getResources().getString(R
+                                        .string.not_transfer_to_self));
                                 return;
                             }
                             showLoading();
@@ -287,82 +314,90 @@ public class HomeActivity extends PCBaseActivity {
                     if (object != null) {
                         try {
                             final String userName = object.getString("firstName");
-                            PCDialogManger.showEditableDialog(mContext,
-                                    mContext.getResources().getString(R.string.Transfer_to)
-                                            + ":" + userName,
-                                    mContext.getResources().
-                                            getString(R.string.Input_amount), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL
-                                    , null,
-                                    new QMUIDialogAction.ActionListener() {
+                            PCDialogManger.showEditableDialog(mContext, mContext.getResources()
+                                    .getString(R.string.Transfer_to) + ":" + userName, mContext
+                                    .getResources().
+                                    getString(R.string.Input_amount), InputType.TYPE_CLASS_NUMBER
+                                    | InputType.TYPE_NUMBER_FLAG_DECIMAL, null, new
+                                    QMUIDialogAction.ActionListener() {
 
 
-                                        @Override
-                                        public void onClick(QMUIDialog qmuiDialog, int i) {
+                                @Override
+                                public void onClick(QMUIDialog qmuiDialog, int i) {
 
-                                            qmuiDialog.dismiss();
+                                    qmuiDialog.dismiss();
+                                }
+                            }, mContext.getResources().getString(R.string.Transfer), new
+                                    IPositiveClickListener() {
+                                @Override
+                                public void onPositiveClick(final String msg, final QMUIDialog
+                                        dialog) {
+                                    if (!isAdmin) {
+                                        if (TextUtils.isEmpty(msg)) {
+                                            SimplexToast.show(mContext, mContext.getResources().
+                                                    getString(R.string.Input_amount));
+                                            return;
                                         }
-                                    }, mContext.getResources().getString(R.string.Transfer),
-                                    new IPositiveClickListener() {
+
+                                        if (Double.valueOf(msg) > Double.valueOf(mAccountSum
+                                                .getText().toString())) {
+                                            SimplexToast.show(mContext, mContext.getResources().
+                                                    getString(R.string.Balance_insufficient));
+                                            return;
+                                        }
+                                    }
+
+                                    Transaction transaction = new Transaction();
+                                    transaction.put("from", ParseUser.getCurrentUser());
+                                    transaction.put("to", object);
+                                    List<String> list = Arrays.asList(new String[]{ParseUser
+                                            .getCurrentUser().getObjectId(), text});
+                                    transaction.put("users", list);
+                                    transaction.put("amount", Double.valueOf(msg));
+                                    transaction.saveInBackground(new SaveCallback() {
                                         @Override
-                                        public void onPositiveClick(final String msg, final QMUIDialog dialog) {
-                                            if (!isAdmin) {
-                                                if (TextUtils.isEmpty(msg)) {
-                                                    SimplexToast.show(mContext, mContext.getResources().
-                                                            getString(R.string.Input_amount));
-                                                    return;
-                                                }
-
-                                                if (Double.valueOf(msg) > Double.valueOf(mAccountSum.getText().toString())) {
-                                                    SimplexToast.show(mContext, mContext.getResources().
-                                                            getString(R.string.Balance_insufficient));
-                                                    return;
-                                                }
-                                            }
-
-                                            Transaction transaction = new Transaction();
-                                            transaction.put("from", ParseUser.getCurrentUser());
-                                            transaction.put("to", object);
-                                            List<String> list = Arrays.asList(new String[]{ParseUser.getCurrentUser().getObjectId(),
-                                                    text});
-                                            transaction.put("users", list);
-                                            transaction.put("amount", Double.valueOf(msg));
-                                            transaction.saveInBackground(new SaveCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    if (e == null) {
-                                                        String tips = mContext.getResources().getString(R.string.Succeeded)
-                                                                + "," + mContext.getResources().getString(R.string.You_transfered)
-                                                                + Double.valueOf(msg);
-                                                        SimplexToast.show(mContext, tips);
-                                                        TrascationItemBean itemBean = new TrascationItemBean();
-                                                        itemBean.setOut(true);
-                                                        itemBean.setSum(msg);
-                                                        itemBean.setUserName(userName);
-                                                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                                                        itemBean.setUpdateTime(format.format(new Date()));
-                                                        mTransactions.add(0, itemBean);
-                                                        runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                //转账成功，刷新界面
-                                                                freshUI(Double.parseDouble(msg)
-                                                                        + Double.parseDouble(mAccountSum.getText().toString()));
-                                                            }
-                                                        });
-                                                        dialog.dismiss();
-                                                    } else {
-                                                        SimplexToast.show(mContext, e.getMessage());
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                String tips = mContext.getResources().getString(R
+                                                        .string.Succeeded) + "," + mContext
+                                                        .getResources().getString(R.string
+                                                                .You_transfered) + Double.valueOf
+                                                        (msg);
+                                                SimplexToast.show(mContext, tips);
+                                                TrascationItemBean itemBean = new
+                                                        TrascationItemBean();
+                                                itemBean.setOut(true);
+                                                itemBean.setSum(msg);
+                                                itemBean.setUserName(userName);
+                                                SimpleDateFormat format = new SimpleDateFormat
+                                                        ("dd/MM/yyyy HH:mm");
+                                                itemBean.setUpdateTime(format.format(new Date()));
+                                                mTransactions.add(0, itemBean);
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        //转账成功，刷新界面
+                                                        freshUI(Double.parseDouble(msg) + Double
+                                                                .parseDouble(mAccountSum.getText
+                                                                        ().toString()));
                                                     }
-                                                }
-                                            });
-
+                                                });
+                                                dialog.dismiss();
+                                            } else {
+                                                SimplexToast.show(mContext, e.getMessage());
+                                            }
                                         }
                                     });
+
+                                }
+                            });
                         } catch (ClassCastException e1) {
-                            SimplexToast.show(mContext, mContext.getResources().getString(R.string.query_error));
+                            SimplexToast.show(mContext, mContext.getResources().getString(R
+                                    .string.query_error));
                         }
                     } else {
-                        SimplexToast.show(mContext, mContext.getResources().getString(R.string.query_error));
+                        SimplexToast.show(mContext, mContext.getResources().getString(R.string
+                                .query_error));
                     }
                 }
             });
@@ -397,4 +432,17 @@ public class HomeActivity extends PCBaseActivity {
 
         return path;
     }
+
+    /**
+     * 收到推送广播通知
+     */
+    private ParsePushBroadcastReceiver pushBroadcastReceiver = new ParsePushBroadcastReceiver() {
+        @Override
+        protected void onPushReceive(Context context, Intent intent) {
+            super.onPushReceive(context, intent);
+            if (!HomeActivity.this.isFinishing()) {
+                getTransactions();
+            }
+        }
+    };
 }
