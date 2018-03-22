@@ -111,15 +111,19 @@ public class HomeActivity extends PCBaseActivity {
         registerReceiver(pushBroadcastReceiver, intentFilter);
     }
 
+    private int comInCount = 0;
+
     @Override
     protected void onResume() {
         super.onResume();
+        comInCount++;
         getTransactions();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        comInCount = 0;
         //注销指定通道
         ParsePush.unsubscribeInBackground(CHANNEL, new SaveCallback() {
             @Override
@@ -143,17 +147,18 @@ public class HomeActivity extends PCBaseActivity {
         parseQuery.findInBackground().onSuccess(new Continuation<List<ParseObject>, Object>() {
             @Override
             public Object then(Task<List<ParseObject>> task) throws Exception {
-                dismissLoading();
                 if (task != null) {
                     sum = 0;
                     List<ParseObject> objects = task.getResult();
                     if (objects != null && objects.size() > 0) {
                         mTransactions.clear();
-                        for (ParseObject transaction : objects) {
-                            double amount = transaction.getDouble("amount");
+                        int size = objects.size();
+                        for (int i = 0; i < size; i++) {
+                            ParseObject transaction = objects.get(i);
                             TrascationItemBean itemBean = transferPO2Bean(transaction);
                             if (itemBean != null) mTransactions.add(itemBean);
                         }
+                        dismissLoading();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -161,9 +166,9 @@ public class HomeActivity extends PCBaseActivity {
                             }
                         });
 
-                    } /*else {
+                    } else {
                         dismissLoading();
-                    }*/
+                    }
                 }
                 return null;
             }
@@ -178,27 +183,37 @@ public class HomeActivity extends PCBaseActivity {
             ParseUser toUser = object.getParseUser("to");
             String fromUserId = fromUser.getObjectId();
 
-            String userName = "";
+            final String[] userName = {""};
             String amount;
             boolean isOut = false;//是不是轉出去
+            long fetchStart = System.currentTimeMillis();
             if (fromUserId.equals(ParseUser.getCurrentUser().getObjectId())) {
                 //我轉出去的
-                try {
-                    userName = toUser.fetchIfNeeded().getString("firstName");
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+                toUser.fetchIfNeededInBackground().onSuccess(new Continuation<ParseObject, Object>() {
+                    @Override
+                    public Object then(Task<ParseObject> task) throws Exception {
+                        if (task != null) {
+                            userName[0] = task.getResult().getString("firstName");
+                        }
+                        return null;
+                    }
+                });
                 isOut = true;
             } else {
                 //別人轉給我的
-                try {
-                    userName = fromUser.fetchIfNeeded().getString("firstName");
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+                fromUser.fetchIfNeededInBackground().onSuccess(new Continuation<ParseObject, Object>() {
+                    @Override
+                    public Object then(Task<ParseObject> task) throws Exception {
+                        if (task != null) {
+                            userName[0] = task.getResult().getString("firstName");
+                        }
+                        return null;
+                    }
+                });
                 isOut = false;
             }
-            itemBean.setUserName(userName);
+            long fetchEnd = System.currentTimeMillis();
+            itemBean.setUserName(userName[0]);
             itemBean.setOut(isOut);
             Double dbMoney = object.getDouble("amount");
             DecimalFormat df = new DecimalFormat("0.00");
@@ -208,6 +223,7 @@ public class HomeActivity extends PCBaseActivity {
             Date date = object.getUpdatedAt();
             itemBean.setUpdateTime(sdf.format(date));
             sum += isOut ? (-dbMoney) : dbMoney;
+            Log.e("sunny", "sum=" + sum + "dbMoney=" + dbMoney + ",isOut=" + isOut);
         }
         return itemBean;
     }
